@@ -5,11 +5,15 @@ import './style.css'
 const raycaster = new THREE.Raycaster()
 const mouse = new THREE.Vector2()
 
+
 let hoveredCube = null
 let targetCube = null
 
+
 // Scene
 const scene = new THREE.Scene()
+
+
 
 // Camera
 const camera = new THREE.PerspectiveCamera(
@@ -41,7 +45,7 @@ controls.target.set(0, 0.5, 0)
 controls.update()
 
 
-
+// For Resizing The Browser
 window.addEventListener('resize', () => {
 
   camera.aspect = window.innerWidth / window.innerHeight
@@ -183,11 +187,24 @@ projects.forEach((project, index) => {
 
 })
 
+cubes.forEach(cube => {
+  cube.userData.targetScale = 1 // default
+})
 
-// Light
-const light = new THREE.PointLight(0xffffff, 10)
-light.position.set(5, 5, 5)
-scene.add(light)
+// Lights
+const light1 = new THREE.PointLight(0xffffff, 10)
+light1.position.set(0, 10, -5)
+scene.add(light1)
+const light2 = new THREE.PointLight(0xffffff, 30)
+light2.position.set(10, 10, 0)
+scene.add(light2)
+const light3 = new THREE.PointLight(0xffffff, 30)
+light3.position.set(-10, 10, 0)
+scene.add(light3)
+const light4 = new THREE.PointLight(0xffffff, 100)
+light4.position.set(0, 10, 10)
+scene.add(light4)
+
 
 
 window.addEventListener("mousemove", (event) => {
@@ -198,6 +215,7 @@ window.addEventListener("mousemove", (event) => {
 })
 
 
+
 const clock = new THREE.Clock()
 
 // Animation
@@ -206,26 +224,30 @@ function animate() {
 
   const intersects = raycaster.intersectObjects(cubes)
 
+
+
+
   // Enlarge on Hover
   if (intersects.length > 0) {
     const cube = intersects[0].object
     if (hoveredCube !== cube) {
-      if (hoveredCube) {
-        hoveredCube.scale.set(1,1,1)
-        hoveredCube.material.emissive.setHex(0x000000)
-      }
+      if (hoveredCube) hoveredCube.userData.targetScale = 1 // reset previous
       hoveredCube = cube
-      cube.scale.set(1.2,1.2,1.2)
-      cube.material.emissive.setHex(0x3333ff)
+      cube.userData.targetScale = 1.5 // hover target
     }
   } else {
-    if (hoveredCube) {
-      hoveredCube.scale.set(1,1,1)
-      hoveredCube.material.emissive.setHex(0x000000)
-    }
-
+    if (hoveredCube) hoveredCube.userData.targetScale = 1
     hoveredCube = null
   }
+
+  cubes.forEach(cube => {
+    // Smoothly lerp each axis toward targetScale
+    const s = cube.userData.targetScale
+    cube.scale.x += (s - cube.scale.x) * 0.2
+    cube.scale.y += (s - cube.scale.y) * 0.2
+    cube.scale.z += (s - cube.scale.z) * 0.2
+  })
+
 
   // Bounce Animation
   const time = clock.getElapsedTime()
@@ -238,10 +260,21 @@ function animate() {
   // Follow Mouse
   cubes.forEach((cube) => {
 
-    cube.rotation.y += (mouse.x * 0.5 - cube.rotation.y) * 0.1
-    cube.rotation.x += (-mouse.y * 0.3 - cube.rotation.x) * 0.1
+    // Project cube position to screen space
+    const vector = cube.position.clone()
+    vector.project(camera)
+
+    // Mouse delta relative to this cube
+    const dx = mouse.x - vector.x
+    const dy = mouse.y - vector.y
+
+    // Apply small tilt
+    cube.rotation.y += (dx * 0.5 - cube.rotation.y) * 0.1
+    cube.rotation.x += (-dy * 0.3 - cube.rotation.x) * 0.1
 
   })
+
+
 
 // Zoom In On Cube When Clicked
   if (targetCube) {
@@ -249,10 +282,10 @@ function animate() {
     targetPosition.copy(targetCube.position)
     // targetPosition.x += 0 // Will cause it to go sideways
     targetPosition.z += 0.02 // Will always keep it straight
-    targetPosition.y += 3
+    targetPosition.y += 3.5
     camera.position.lerp(targetPosition, 0.05)
     controls.target.lerp(targetCube.position, 0.05)
-}
+  }
 
 
   requestAnimationFrame(animate)
