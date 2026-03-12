@@ -1,9 +1,12 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js"
 import './style.css'
 
 const raycaster = new THREE.Raycaster()
 const mouse = new THREE.Vector2()
+const textureLoader = new THREE.TextureLoader()
+const modelLoader = new GLTFLoader()
 
 
 let hoveredCube = null
@@ -75,68 +78,6 @@ cube.position.set(0,0,0)
 
 
 // ------------------------------     PROJECT DATA
-const projects = [
-  {
-    title: "NOVA Breach",
-    type: "game",
-    link: "https://example.com/nova",
-    texture: null
-  },
-  {
-    title: "3D Print Gearbox",
-    type: "3d",
-    link: "https://example.com/gearbox",
-    texture: null
-  },
-  {
-    title: "Portfolio Website",
-    type: "web",
-    link: "https://example.com/portfolio",
-    texture: null
-  },
-  {
-    title: "Hardware Mod",
-    type: "hardware",
-    link: "https://example.com/mod",
-    texture: null
-  },
-  {
-    title: "TEST1",
-    type: "hardware",
-    link: "https://example.com/mod",
-    texture: null
-  },
-  {
-    title: "TEST2",
-    type: "hardware",
-    link: "https://example.com/mod",
-    texture: null
-  },
-  {
-    title: "TEST3",
-    type: "hardware",
-    link: "https://example.com/mod",
-    texture: null
-  },
-  {
-    title: "TEST4",
-    type: "hardware",
-    link: "https://example.com/mod",
-    texture: null
-  },
-  {
-    title: "TEST5",
-    type: "hardware",
-    link: "https://example.com/mod",
-    texture: null
-  },
-  {
-    title: "TEST6",
-    type: "hardware",
-    link: "https://example.com/mod",
-    texture: null
-  }
-]
 
 
 // GRID OF CUBES
@@ -163,6 +104,8 @@ const projects = [
 
 
 // Cubes With Data
+import { projects } from "./data/projects.js"
+
 const cubes = []
 const xSpacing = 3
 const zSpacing = 3
