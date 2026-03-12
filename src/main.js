@@ -15,6 +15,7 @@ let targetCube = null
 
 // Scene
 const scene = new THREE.Scene()
+scene.background = new THREE.Color(0x000011)
 
 
 
@@ -59,7 +60,17 @@ window.addEventListener('resize', () => {
 })
 
 // Grid
-const grid = new THREE.GridHelper(40, 40)
+// const grid = new THREE.GridHelper(40, 40)
+// scene.add(grid)
+const grid = new THREE.GridHelper(
+  100,       // size of grid
+  100,       // number of divisions
+  0xf40fed, // center line color
+  0xf40fed  // grid line color
+)
+grid.material.transparent = true
+grid.material.opacity = 0.35
+
 scene.add(grid)
 
 // Cube
@@ -146,16 +157,16 @@ cubes.forEach(cube => {
 })
 
 // Lights
-const light1 = new THREE.PointLight(0xffffff, 10)
+const light1 = new THREE.PointLight(0xffffff, 20)
 light1.position.set(0, 10, -5)
 scene.add(light1)
-const light2 = new THREE.PointLight(0xffffff, 30)
+const light2 = new THREE.PointLight(0xffffff, 60)
 light2.position.set(10, 10, 0)
 scene.add(light2)
-const light3 = new THREE.PointLight(0xffffff, 30)
+const light3 = new THREE.PointLight(0xffffff, 60)
 light3.position.set(-10, 10, 0)
 scene.add(light3)
-const light4 = new THREE.PointLight(0xffffff, 100)
+const light4 = new THREE.PointLight(0xffffff, 200)
 light4.position.set(0, 10, 10)
 scene.add(light4)
 
@@ -227,6 +238,10 @@ function animate() {
 
   })
 
+  grid.position.z += 0.02
+  if (grid.position.z > 1) {
+    grid.position.z = 0
+  }
 
 
 // Zoom In On Cube When Clicked
@@ -234,7 +249,7 @@ function animate() {
     const targetPosition = new THREE.Vector3()
     targetPosition.copy(targetCube.position)
     // targetPosition.x += 0 // Will cause it to go sideways
-    targetPosition.z += 0.02 // Will always keep it straight
+    targetPosition.z += 0.4 // Will always keep it straight
     targetPosition.y += 3.5
     camera.position.lerp(targetPosition, 0.05)
     controls.target.lerp(targetCube.position, 0.05)
