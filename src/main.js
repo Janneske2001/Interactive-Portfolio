@@ -13,16 +13,29 @@ const camera = new THREE.PerspectiveCamera(
  1000
 )
 
-camera.position.set(0, 10, -5)
-camera.lookAt(0, 0, 0)
+camera.position.set(0, 8, -4)
+// camera.lookAt(0, 0, 0)
 
-// Renderer
+// Renderer + Controls
 const renderer = new THREE.WebGLRenderer({ antialias: true })
 renderer.setSize(window.innerWidth, window.innerHeight)
 document.body.appendChild(renderer.domElement)
 
 const controls = new OrbitControls(camera, renderer.domElement)
 controls.enableDamping = true
+// Max-Min Zoom
+controls.minDistance = 6
+controls.maxDistance = 12
+// Prevent Clipping Bottom
+controls.maxPolarAngle = Math.PI / 2
+// Prevent Panning Away
+controls.enablePan = false
+// Lock Target
+controls.target.set(0, 1, 0)
+
+controls.update()
+
+
 
 window.addEventListener('resize', () => {
 
