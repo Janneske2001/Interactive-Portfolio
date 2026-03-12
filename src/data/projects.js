@@ -11,8 +11,8 @@ export const projects = [
 {
     id: "gearbox",
     title: "3D Gearbox",
-    type: "model",
-    model: "/models/gearbox.glb",
+    type: "image",
+    image: "/images/test1.png",
     link: "https://example.com/gearbox"
 },
 
