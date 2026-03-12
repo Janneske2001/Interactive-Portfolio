@@ -6,6 +6,7 @@ const raycaster = new THREE.Raycaster()
 const mouse = new THREE.Vector2()
 
 let hoveredCube = null
+let targetCube = null
 
 // Scene
 const scene = new THREE.Scene()
@@ -18,7 +19,7 @@ const camera = new THREE.PerspectiveCamera(
   1000
 )
 
-camera.position.set(0, 8, 4)
+camera.position.set(0, 7, 2)
 // camera.lookAt(0, 0, 0)
 
 // Renderer + Controls
@@ -29,8 +30,8 @@ document.body.appendChild(renderer.domElement)
 const controls = new OrbitControls(camera, renderer.domElement)
 controls.enableDamping = true
 // Max-Min Zoom
-controls.minDistance = 6
-controls.maxDistance = 12
+controls.minDistance = 3
+controls.maxDistance = 8
 // Prevent Clipping Bottom
 controls.maxPolarAngle = Math.PI / 2
 // Prevent Panning Away
@@ -56,11 +57,14 @@ scene.add(grid)
 
 // Cube
 const geometry = new THREE.BoxGeometry()
-const material = new THREE.MeshStandardMaterial({ color: 0x00aaff })
+const material = new THREE.MeshStandardMaterial({
+  color: 0x0088ff,
+  emissive: 0x000000
+})
 
 // SINGLE CUBE
 const cube = new THREE.Mesh(geometry, material)
-// cube.position.y = 1
+cube.position.y = 1
 cube.position.set(0,0,0)
 
 // scene.add(cube)
@@ -170,7 +174,7 @@ projects.forEach((project, index) => {
 
   cube.position.x = (x - rowLength / 2) * xSpacing + (xSpacing / 2)
   cube.position.z = (z - rowLength / 2) * zSpacing + (zSpacing)
-  cube.position.y = 1
+
 
   cube.userData = project
 
@@ -194,31 +198,62 @@ window.addEventListener("mousemove", (event) => {
 })
 
 
+const clock = new THREE.Clock()
+
 // Animation
 function animate() {
   raycaster.setFromCamera(mouse, camera)
 
   const intersects = raycaster.intersectObjects(cubes)
 
+  // Enlarge on Hover
   if (intersects.length > 0) {
     const cube = intersects[0].object
     if (hoveredCube !== cube) {
       if (hoveredCube) {
         hoveredCube.scale.set(1,1,1)
+        hoveredCube.material.emissive.setHex(0x000000)
       }
-
       hoveredCube = cube
       cube.scale.set(1.2,1.2,1.2)
+      cube.material.emissive.setHex(0x3333ff)
     }
-
   } else {
     if (hoveredCube) {
       hoveredCube.scale.set(1,1,1)
+      hoveredCube.material.emissive.setHex(0x000000)
     }
 
     hoveredCube = null
-
   }
+
+  // Bounce Animation
+  const time = clock.getElapsedTime()
+
+  cubes.forEach((cube, index) => {
+    cube.position.y = 1 + Math.sin(time + index) * 0.2
+  })
+
+
+  // Follow Mouse
+  cubes.forEach((cube) => {
+
+    cube.rotation.y += (mouse.x * 0.5 - cube.rotation.y) * 0.1
+    cube.rotation.x += (-mouse.y * 0.3 - cube.rotation.x) * 0.1
+
+  })
+
+// Zoom In On Cube When Clicked
+  if (targetCube) {
+    const targetPosition = new THREE.Vector3()
+    targetPosition.copy(targetCube.position)
+    // targetPosition.x += 0 // Will cause it to go sideways
+    targetPosition.z += 0.02 // Will always keep it straight
+    targetPosition.y += 3
+    camera.position.lerp(targetPosition, 0.05)
+    controls.target.lerp(targetCube.position, 0.05)
+}
+
 
   requestAnimationFrame(animate)
 
@@ -231,15 +266,26 @@ function animate() {
 
 }
 
+
+// Click Event Zoom In
 window.addEventListener("click", () => {
 
   if (hoveredCube) {
-    const project = hoveredCube.userData
-    console.log("Opening project:", project.title)
-    window.open(project.link, "_blank")
+    targetCube = hoveredCube
   }
 
 })
+
+// Click Event Directly Open Site
+// window.addEventListener("click", () => {
+
+//   if (hoveredCube) {
+//     const project = hoveredCube.userData
+//     console.log("Opening project:", project.title)
+//     window.open(project.link, "_blank")
+//   }
+
+// })
 
 
 animate()
