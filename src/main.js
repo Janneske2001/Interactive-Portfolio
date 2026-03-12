@@ -13,8 +13,8 @@ const camera = new THREE.PerspectiveCamera(
  1000
 )
 
-camera.position.set(0, 5, 5)
-camera.lookAt(0, 1, 0)
+camera.position.set(0, 10, -5)
+camera.lookAt(0, 0, 0)
 
 // Renderer
 const renderer = new THREE.WebGLRenderer({ antialias: true })
@@ -40,11 +40,36 @@ scene.add(grid)
 // Cube
 const geometry = new THREE.BoxGeometry()
 const material = new THREE.MeshStandardMaterial({ color: 0x00aaff })
+
+// SINGLE CUBE
 const cube = new THREE.Mesh(geometry, material)
 // cube.position.y = 1
 cube.position.set(0,0,0)
 
-scene.add(cube)
+// scene.add(cube)
+
+
+// GRID OF CUBES
+const cubes = []
+
+const gridSize = 3
+const xSpacing = 4
+const ySpacing = 3
+
+for (let x = 0; x < gridSize; x++) {
+  for (let z = 0; z < gridSize; z++) {
+
+    const cube = new THREE.Mesh(geometry, material)
+
+    cube.position.x = (x - gridSize / 2) * xSpacing + (xSpacing / 2)
+    cube.position.z = (z - gridSize / 2) * ySpacing + (ySpacing / 2)
+    cube.position.y = 1
+
+    scene.add(cube)
+    cubes.push(cube)
+
+  }
+}
 
 // Light
 const light = new THREE.PointLight(0xffffff, 10)
@@ -56,8 +81,8 @@ function animate() {
 
  requestAnimationFrame(animate)
 
- cube.rotation.x += 0.01
- cube.rotation.y += 0.01
+//  cube.rotation.x += 0.01
+//  cube.rotation.y += 0.01
 
  controls.update()
 
