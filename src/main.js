@@ -103,7 +103,7 @@ cube.position.set(0,0,0)
 // }
 
 
-// Cubes With Data
+// Objects With Data
 import { projects } from "./data/projects.js"
 
 const cubes = []
@@ -112,23 +112,34 @@ const zSpacing = 3
 
 projects.forEach((project, index) => {
 
-  const cube = new THREE.Mesh(geometry, material)
+  console.log("Creating project:", project.title)
+
+  const texture = new THREE.TextureLoader().load(project.image)
+
+  const cubeMaterial = new THREE.MeshStandardMaterial({
+    map: texture
+  })
+
+  const cube = new THREE.Mesh(geometry, cubeMaterial)
 
   const rowLength = 4
-
   const x = index % rowLength
   const z = Math.floor(index / rowLength)
 
   cube.position.x = (x - rowLength / 2) * xSpacing + (xSpacing / 2)
-  cube.position.z = (z - rowLength / 2) * zSpacing + (zSpacing)
+  cube.position.z = (z - rowLength / 2) * zSpacing + zSpacing
 
+  cube.userData.project = project
 
-  cube.userData = project
+  console.log("Attached project:", cube.userData.project.title)
 
   scene.add(cube)
   cubes.push(cube)
 
 })
+
+console.table(projects)
+console.log(cubes)
 
 cubes.forEach(cube => {
   cube.userData.targetScale = 1 // default
@@ -166,7 +177,6 @@ function animate() {
   raycaster.setFromCamera(mouse, camera)
 
   const intersects = raycaster.intersectObjects(cubes)
-
 
 
 
@@ -212,8 +222,8 @@ function animate() {
     const dy = mouse.y - vector.y
 
     // Apply small tilt
-    cube.rotation.y += (dx * 0.5 - cube.rotation.y) * 0.1
-    cube.rotation.x += (-dy * 0.3 - cube.rotation.x) * 0.1
+    cube.rotation.y += (dx * 0.6 - cube.rotation.y) * 0.1
+    cube.rotation.x += (-dy * 0.4 - cube.rotation.x) * 0.1
 
   })
 
@@ -249,6 +259,10 @@ window.addEventListener("click", () => {
   if (hoveredCube) {
     targetCube = hoveredCube
   }
+
+  cubes.forEach((cube, index) => {
+    console.log(index, cube.userData.project.title)
+  })
 
 })
 

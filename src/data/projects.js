@@ -4,7 +4,7 @@ export const projects = [
     id: "nova",
     title: "NOVA Breach",
     type: "image",
-    image: "/images/nova.jpg",
+    image: "/images/test.jpg",
     link: "https://example.com/nova"
 },
 
@@ -20,7 +20,7 @@ export const projects = [
     id: "portfolio",
     title: "Old Portfolio",
     type: "image",
-    image: "/images/portfolio.jpg",
+    image: "/images/test2.jpg",
     link: "https://example.com/portfolio"
 },
 
