@@ -1,4 +1,5 @@
 import * as THREE from 'three'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
 // Scene
 const scene = new THREE.Scene()
@@ -11,22 +12,27 @@ const camera = new THREE.PerspectiveCamera(
  1000
 )
 
-camera.position.set(5, 5, 5)
-camera.lookAt(0, 0, 0)
+camera.position.set(0, 5, 5)
+camera.lookAt(0, 1, 0)
 
 // Renderer
 const renderer = new THREE.WebGLRenderer({ antialias: true })
 renderer.setSize(window.innerWidth, window.innerHeight)
 document.body.appendChild(renderer.domElement)
 
+const controls = new OrbitControls(camera, renderer.domElement)
+controls.enableDamping = true
+
 // Grid
-const grid = new THREE.GridHelper(20, 20)
+const grid = new THREE.GridHelper(40, 40)
 scene.add(grid)
 
 // Cube
 const geometry = new THREE.BoxGeometry()
 const material = new THREE.MeshStandardMaterial({ color: 0x00aaff })
 const cube = new THREE.Mesh(geometry, material)
+// cube.position.y = 1
+cube.position.set(0,0,0)
 
 scene.add(cube)
 
@@ -42,6 +48,8 @@ function animate() {
 
  cube.rotation.x += 0.01
  cube.rotation.y += 0.01
+
+ controls.update()
 
  renderer.render(scene, camera)
 
