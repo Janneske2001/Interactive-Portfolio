@@ -1,5 +1,6 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+import './style.css'
 
 // Scene
 const scene = new THREE.Scene()
@@ -22,6 +23,15 @@ document.body.appendChild(renderer.domElement)
 
 const controls = new OrbitControls(camera, renderer.domElement)
 controls.enableDamping = true
+
+window.addEventListener('resize', () => {
+
+  camera.aspect = window.innerWidth / window.innerHeight
+  camera.updateProjectionMatrix()
+
+  renderer.setSize(window.innerWidth, window.innerHeight)
+
+})
 
 // Grid
 const grid = new THREE.GridHelper(40, 40)
