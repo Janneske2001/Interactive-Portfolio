@@ -23,7 +23,7 @@ function createGridTexture() {
 
   const ctx = canvas.getContext("2d")
 
-  ctx.fillStyle = "#000000"
+  ctx.fillStyle = "#000002"
   ctx.fillRect(0, 0, size, size)
 
   ctx.strokeStyle = "#f40fed"
@@ -56,7 +56,9 @@ function createGridTexture() {
 
 // Scene
 const scene = new THREE.Scene()
-scene.background = new THREE.Color(0x241b51)
+scene.background = new THREE.Color(0x000016)
+// Adding Fog To Conceal Grid Edges
+scene.fog = new THREE.Fog(0x000016, 10, 60)
 
 
 
@@ -130,8 +132,8 @@ gridTexture.repeat.set(20, 20)
 
 const gridMaterial = new THREE.MeshBasicMaterial({
   map: gridTexture,
-  transparent: true,
-  opacity: 0.7
+  transparent: false,
+  opacity: 1
 })
 
 const gridGeometry = new THREE.PlaneGeometry(200, 200)
@@ -142,7 +144,6 @@ grid.rotation.x = -Math.PI / 2
 grid.position.y = -0.01
 
 scene.add(grid)
-
 
 
 
@@ -230,18 +231,21 @@ Objects.forEach(object => {
 })
 
 // Lights
-const light1 = new THREE.PointLight(0xffffff, 40)
-light1.position.set(0, 10, -5)
-scene.add(light1)
-const light2 = new THREE.PointLight(0xffffff, 80)
-light2.position.set(10, 10, 0)
-scene.add(light2)
-const light3 = new THREE.PointLight(0xffffff, 80)
-light3.position.set(-10, 10, 0)
-scene.add(light3)
-const light4 = new THREE.PointLight(0xffffff, 200)
-light4.position.set(0, 10, 10)
-scene.add(light4)
+const lightTop = new THREE.PointLight(0xffffff, 100, 0)
+lightTop.position.set(0, 10, -10)
+scene.add(lightTop)
+const lightRight = new THREE.PointLight(0xffffff, 150, 0)
+lightRight.position.set(10, 10, 0)
+scene.add(lightRight)
+const lightLeft = new THREE.PointLight(0xffffff, 150, 0)
+lightLeft.position.set(-10, 10, 0)
+scene.add(lightLeft)
+const lightBottom = new THREE.PointLight(0xffffff, 200, 0)
+lightBottom.position.set(0, 10, 10)
+scene.add(lightBottom)
+const lightGrid = new THREE.PointLight(0xf40fed, 8000, 0)
+lightGrid.position.set(0, -200, 0)
+scene.add(lightGrid)
 
 
 // Mouse Tracker for Object Movement
@@ -317,8 +321,8 @@ function animate() {
   // Move Grid
   gridTexture.offset.y += 0.003
   // Blur Grid
-  const distance = camera.position.distanceTo(grid.position)
-  grid.material.opacity = Math.min(0.6, 20 / distance)
+  // const distance = camera.position.distanceTo(grid.position)
+  // grid.material.opacity = Math.min(0.6, 20 / distance)
 
 // Zoom In On Object When Clicked
   if (targetObject) {
@@ -330,6 +334,13 @@ function animate() {
     camera.position.lerp(targetPosition, 0.05)
     controls.target.lerp(targetObject.position, 0.05)
   }
+
+  // Trying a zoom out when clicked away
+  // else {
+    
+  //   camera.position.lerp(targetPosition, 0.05)
+  //   controls.target.lerp(targetObject.position, 0.05)
+  // }
 
 
   requestAnimationFrame(animate)
