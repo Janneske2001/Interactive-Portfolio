@@ -231,20 +231,20 @@ Objects.forEach(object => {
 })
 
 // Lights
-const lightTop = new THREE.PointLight(0xffffff, 100, 0)
+const lightTop = new THREE.PointLight(0xffffff, 0.5, 0, 0)
 lightTop.position.set(0, 10, -10)
 scene.add(lightTop)
-const lightRight = new THREE.PointLight(0xffffff, 150, 0)
+const lightRight = new THREE.PointLight(0xffffff, 0.8, 0, 0)
 lightRight.position.set(10, 10, 0)
 scene.add(lightRight)
-const lightLeft = new THREE.PointLight(0xffffff, 150, 0)
+const lightLeft = new THREE.PointLight(0xffffff, 0.8, 0, 0)
 lightLeft.position.set(-10, 10, 0)
 scene.add(lightLeft)
-const lightBottom = new THREE.PointLight(0xffffff, 200, 0)
+const lightBottom = new THREE.PointLight(0xffffff, 1, 0, 0)
 lightBottom.position.set(0, 10, 10)
 scene.add(lightBottom)
-const lightGrid = new THREE.PointLight(0xf40fed, 8000, 0)
-lightGrid.position.set(0, -200, 0)
+const lightGrid = new THREE.PointLight(0xf40fed, 0.5, 0, 0)
+lightGrid.position.set(0, -400, 0)
 scene.add(lightGrid)
 
 
