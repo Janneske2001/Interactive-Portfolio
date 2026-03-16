@@ -13,3 +13,29 @@ html, body {
 canvas {
   display: block;
 }
+
+#project-panel {
+  position: absolute;
+  right: 40px;
+  top: 40px;
+
+  width: 320px;
+
+  background: rgba(10,10,20,0.9);
+  color: white;
+
+  padding: 20px;
+  border-radius: 10px;
+
+  backdrop-filter: blur(10px);
+}
+
+#project-panel.hidden {
+  display: none;
+}
+
+#project-image {
+  width: 100%;
+  border-radius: 6px;
+  margin: 10px 0;
+}

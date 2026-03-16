@@ -355,20 +355,39 @@ function animate() {
 }
 
 
+
+
+function showProject(project) {
+
+  console.log("Opening project:", project)
+
+  document.getElementById("project-title").textContent = project.title
+  document.getElementById("project-image").src = project.image
+  document.getElementById("project-description").textContent = project.description
+  document.getElementById("project-link").href = project.link
+  document.getElementById("project-panel").classList.remove("hidden")
+
+}
+
+
 // Click Event Zoom In
 window.addEventListener("click", () => {
 
   if (hoveredObject) {
+
     targetObject = hoveredObject
+    // open project panel
+    showProject(hoveredObject.userData.project)
+
   }
   else {
     targetObject = null
   }
 
-  // ------------------------------------------------------------------------------------------------------- LOG
-  Objects.forEach((object, index) => {
-    console.log(index, object.userData.project.title)
-  })
+  // // ------------------------------------------------------------------------------------------------------- LOG
+  // Objects.forEach((object, index) => {
+  //   console.log(index, object.userData.project.title)
+  // })
 
 })
 

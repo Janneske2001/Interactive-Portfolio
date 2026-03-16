@@ -5,6 +5,7 @@ export const projects = [
     title: "NOVA Breach",
     type: "image",
     image: "/images/test.jpg",
+    description: "A gravity-based platformer puzzle game set inside a digital system.",
     link: "https://example.com/nova"
 },
 
@@ -13,6 +14,7 @@ export const projects = [
     title: "3D Gearbox",
     type: "image",
     image: "/images/test1.png",
+    description: "Testing Gearbox description stuff",
     link: "https://example.com/gearbox"
 },
 
@@ -21,6 +23,7 @@ export const projects = [
     title: "Old Portfolio",
     type: "image",
     image: "/images/test2.jpg",
+    description: "A gravity-based platformer puzzle game set inside a digital system.",
     link: "https://example.com/portfolio"
 },
 
@@ -29,6 +32,7 @@ export const projects = [
     title: "Old Portfolio",
     type: "image",
     image: "/images/portfolio.jpg",
+    description: "A gravity-based platformer puzzle game set inside a digital system.",
     link: "https://example.com/portfolio"
 },
 
@@ -37,6 +41,7 @@ export const projects = [
     title: "Old Portfolio",
     type: "image",
     image: "/images/portfolio.jpg",
+    description: "A gravity-based platformer puzzle game set inside a digital system.",
     link: "https://example.com/portfolio"
 },
 
@@ -45,6 +50,7 @@ export const projects = [
     title: "Old Portfolio",
     type: "image",
     image: "/images/portfolio.jpg",
+    description: "A gravity-based platformer puzzle game set inside a digital system.",
     link: "https://example.com/portfolio"
 },
 
@@ -53,6 +59,7 @@ export const projects = [
     title: "3D Gearbox",
     type: "model",
     model: "/models/gearbox.glb",
+    description: "A gravity-based platformer puzzle game set inside a digital system.",
     link: "https://example.com/gearbox"
 },
 
@@ -61,6 +68,7 @@ export const projects = [
     title: "Old Portfolio",
     type: "image",
     image: "/images/portfolio.jpg",
+    description: "A gravity-based platformer puzzle game set inside a digital system.",
     link: "https://example.com/portfolio"
 },
 
@@ -69,6 +77,7 @@ export const projects = [
     title: "Old Portfolio",
     type: "image",
     image: "/images/portfolio.jpg",
+    description: "A gravity-based platformer puzzle game set inside a digital system.",
     link: "https://example.com/portfolio"
 },
 
@@ -77,6 +86,7 @@ export const projects = [
     title: "Old Portfolio",
     type: "image",
     image: "/images/portfolio.jpg",
+    description: "A gravity-based platformer puzzle game set inside a digital system.",
     link: "https://example.com/portfolio"
 },
 
@@ -85,6 +95,7 @@ export const projects = [
     title: "Old Portfolio",
     type: "image",
     image: "/images/portfolio.jpg",
+    description: "A gravity-based platformer puzzle game set inside a digital system.",
     link: "https://example.com/portfolio"
 }
 
