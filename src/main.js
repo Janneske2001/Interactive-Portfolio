@@ -9,13 +9,54 @@ const textureLoader = new THREE.TextureLoader()
 const modelLoader = new GLTFLoader()
 
 
-let hoveredCube = null
-let targetCube = null
+let hoveredObject = null
+let targetObject = null
+
+
+// Dynamic Grid Texture Making
+function createGridTexture() {
+
+  const size = 512
+  const canvas = document.createElement("canvas")
+  canvas.width = size
+  canvas.height = size
+
+  const ctx = canvas.getContext("2d")
+
+  ctx.fillStyle = "#000000"
+  ctx.fillRect(0, 0, size, size)
+
+  ctx.strokeStyle = "#f40fed"
+  ctx.lineWidth = 1
+
+  const divisions = 5
+  const step = size / divisions
+
+  for (let i = 0; i <= divisions; i++) {
+
+    const p = i * step
+
+    ctx.beginPath()
+    ctx.moveTo(p, 0)
+    ctx.lineTo(p, size)
+    ctx.stroke()
+
+    ctx.beginPath()
+    ctx.moveTo(0, p)
+    ctx.lineTo(size, p)
+    ctx.stroke()
+
+  }
+
+  return new THREE.CanvasTexture(canvas)
+
+}
+
 
 
 // Scene
 const scene = new THREE.Scene()
-scene.background = new THREE.Color(0x000011)
+scene.background = new THREE.Color(0x241b51)
 
 
 
@@ -43,7 +84,12 @@ controls.maxDistance = 8
 // Prevent Clipping Bottom
 controls.maxPolarAngle = Math.PI / 2
 // Prevent Panning Away
-controls.enablePan = false
+const minPan = new THREE.Vector3(-5, 1, -5);
+const maxPan = new THREE.Vector3(5, 2, 5);
+controls.addEventListener('change', () => {
+    controls.target.clamp(minPan, maxPan);
+});
+// controls.enablePan = false
 // Lock Target
 controls.target.set(0, 0.5, 0)
 controls.update()
@@ -59,31 +105,55 @@ window.addEventListener('resize', () => {
 
 })
 
-// Grid
+// Simple Grid
 // const grid = new THREE.GridHelper(40, 40)
 // scene.add(grid)
-const grid = new THREE.GridHelper(
-  100,       // size of grid
-  100,       // number of divisions
-  0xf40fed, // center line color
-  0xf40fed  // grid line color
-)
-grid.material.transparent = true
-grid.material.opacity = 0.35
+// const grid = new THREE.GridHelper(
+//   100,       // size of grid
+//   100,       // number of divisions
+//   0xf40fed, // center line color
+//   0xf40fed  // grid line color
+// )
+// grid.material.transparent = true
+// grid.material.opacity = 0.35
+
+// scene.add(grid)
+
+
+// Adding Dynamic Grid to the Scene
+const gridTexture = createGridTexture()
+
+gridTexture.anisotropy = 8
+gridTexture.wrapS = THREE.RepeatWrapping
+gridTexture.wrapT = THREE.RepeatWrapping
+gridTexture.repeat.set(20, 20)
+
+const gridMaterial = new THREE.MeshBasicMaterial({
+  map: gridTexture,
+  transparent: true,
+  opacity: 0.7
+})
+
+const gridGeometry = new THREE.PlaneGeometry(200, 200)
+
+const grid = new THREE.Mesh(gridGeometry, gridMaterial)
+
+grid.rotation.x = -Math.PI / 2
+grid.position.y = -0.01
 
 scene.add(grid)
+
+
+
 
 // Cube
 const geometry = new THREE.BoxGeometry()
 const material = new THREE.MeshStandardMaterial({
-  color: 0x0088ff,
-  emissive: 0x000000
+  color: 0x03b7ff
 })
 
 // SINGLE CUBE
 const cube = new THREE.Mesh(geometry, material)
-cube.position.y = 1
-cube.position.set(0,0,0)
 
 // scene.add(cube)
 
@@ -117,53 +187,56 @@ cube.position.set(0,0,0)
 // Objects With Data
 import { projects } from "./data/projects.js"
 
-const cubes = []
+const Objects = []
 const xSpacing = 3
 const zSpacing = 3
 
 projects.forEach((project, index) => {
 
+  // ------------------------------------------------------------------------------------------------------- LOG
   console.log("Creating project:", project.title)
 
   const texture = new THREE.TextureLoader().load(project.image)
 
-  const cubeMaterial = new THREE.MeshStandardMaterial({
+  const ObjectMaterial = new THREE.MeshStandardMaterial({
     map: texture
   })
 
-  const cube = new THREE.Mesh(geometry, cubeMaterial)
+  const object = new THREE.Mesh(geometry, ObjectMaterial)
 
   const rowLength = 4
   const x = index % rowLength
   const z = Math.floor(index / rowLength)
 
-  cube.position.x = (x - rowLength / 2) * xSpacing + (xSpacing / 2)
-  cube.position.z = (z - rowLength / 2) * zSpacing + zSpacing
+  object.position.x = (x - rowLength / 2) * xSpacing + (xSpacing / 2)
+  object.position.z = (z - rowLength / 2) * zSpacing + zSpacing
 
-  cube.userData.project = project
+  object.userData.project = project
 
-  console.log("Attached project:", cube.userData.project.title)
+  // ------------------------------------------------------------------------------------------------------- LOG
+  console.log("Attached project:", object.userData.project.title)
 
-  scene.add(cube)
-  cubes.push(cube)
+  scene.add(object)
+  Objects.push(object)
 
 })
 
+// ------------------------------------------------------------------------------------------------------- LOG
 console.table(projects)
-console.log(cubes)
+console.log(Objects)
 
-cubes.forEach(cube => {
-  cube.userData.targetScale = 1 // default
+Objects.forEach(object => {
+  object.userData.targetScale = 1 // default scale
 })
 
 // Lights
-const light1 = new THREE.PointLight(0xffffff, 20)
+const light1 = new THREE.PointLight(0xffffff, 40)
 light1.position.set(0, 10, -5)
 scene.add(light1)
-const light2 = new THREE.PointLight(0xffffff, 60)
+const light2 = new THREE.PointLight(0xffffff, 80)
 light2.position.set(10, 10, 0)
 scene.add(light2)
-const light3 = new THREE.PointLight(0xffffff, 60)
+const light3 = new THREE.PointLight(0xffffff, 80)
 light3.position.set(-10, 10, 0)
 scene.add(light3)
 const light4 = new THREE.PointLight(0xffffff, 200)
@@ -171,7 +244,7 @@ light4.position.set(0, 10, 10)
 scene.add(light4)
 
 
-
+// Mouse Tracker for Object Movement
 window.addEventListener("mousemove", (event) => {
 
   mouse.x = (event.clientX / window.innerWidth) * 2 - 1
@@ -179,80 +252,83 @@ window.addEventListener("mousemove", (event) => {
 
 })
 
-
-
 const clock = new THREE.Clock()
 
-// Animation
+
+
+
+
+// -------------------------                                                        Animation
 function animate() {
   raycaster.setFromCamera(mouse, camera)
 
-  const intersects = raycaster.intersectObjects(cubes)
+  const intersects = raycaster.intersectObjects(Objects)
 
 
 
   // Enlarge on Hover
   if (intersects.length > 0) {
-    const cube = intersects[0].object
-    if (hoveredCube !== cube) {
-      if (hoveredCube) hoveredCube.userData.targetScale = 1 // reset previous
-      hoveredCube = cube
-      cube.userData.targetScale = 1.5 // hover target
+    const object = intersects[0].object
+    if (hoveredObject !== object) {
+      if (hoveredObject) hoveredObject.userData.targetScale = 1 // reset previous
+      hoveredObject = object
+      object.userData.targetScale = 1.5 // hover target
     }
-  } else {
-    if (hoveredCube) hoveredCube.userData.targetScale = 1
-    hoveredCube = null
+  }
+  else {
+    if (hoveredObject) hoveredObject.userData.targetScale = 1
+    hoveredObject = null
   }
 
-  cubes.forEach(cube => {
+  Objects.forEach(object => {
     // Smoothly lerp each axis toward targetScale
-    const s = cube.userData.targetScale
-    cube.scale.x += (s - cube.scale.x) * 0.2
-    cube.scale.y += (s - cube.scale.y) * 0.2
-    cube.scale.z += (s - cube.scale.z) * 0.2
+    const s = object.userData.targetScale
+    object.scale.x += (s - object.scale.x) * 0.2
+    object.scale.y += (s - object.scale.y) * 0.2
+    object.scale.z += (s - object.scale.z) * 0.2
   })
 
 
   // Bounce Animation
   const time = clock.getElapsedTime()
 
-  cubes.forEach((cube, index) => {
-    cube.position.y = 1 + Math.sin(time + index) * 0.2
+  Objects.forEach((object, index) => {
+    object.position.y = 1 + Math.sin(time + index) * 0.2
   })
 
 
   // Follow Mouse
-  cubes.forEach((cube) => {
+  Objects.forEach((object) => {
 
-    // Project cube position to screen space
-    const vector = cube.position.clone()
+    // Project object position to screen space
+    const vector = object.position.clone()
     vector.project(camera)
 
-    // Mouse delta relative to this cube
+    // Mouse delta relative to this object
     const dx = mouse.x - vector.x
     const dy = mouse.y - vector.y
 
     // Apply small tilt
-    cube.rotation.y += (dx * 0.6 - cube.rotation.y) * 0.1
-    cube.rotation.x += (-dy * 0.4 - cube.rotation.x) * 0.1
+    object.rotation.y += (dx * 0.6 - object.rotation.y) * 0.1
+    object.rotation.x += (-dy * 0.4 - object.rotation.x) * 0.1
 
   })
 
-  grid.position.z += 0.02
-  if (grid.position.z > 1) {
-    grid.position.z = 0
-  }
+  // Move Grid
+  gridTexture.offset.y += 0.003
+  // Blur Grid
+  const distance = camera.position.distanceTo(grid.position)
+  grid.material.opacity = Math.min(0.6, 20 / distance)
 
-
-// Zoom In On Cube When Clicked
-  if (targetCube) {
+// Zoom In On Object When Clicked
+  if (targetObject) {
     const targetPosition = new THREE.Vector3()
-    targetPosition.copy(targetCube.position)
+    targetPosition.copy(targetObject.position)
     // targetPosition.x += 0 // Will cause it to go sideways
     targetPosition.z += 0.4 // Will always keep it straight
     targetPosition.y += 3.5
     camera.position.lerp(targetPosition, 0.05)
-    controls.target.lerp(targetCube.position, 0.05)
+    controls.target.lerp(targetObject.position, 0.05)
   }
 
 
@@ -271,12 +347,16 @@ function animate() {
 // Click Event Zoom In
 window.addEventListener("click", () => {
 
-  if (hoveredCube) {
-    targetCube = hoveredCube
+  if (hoveredObject) {
+    targetObject = hoveredObject
+  }
+  else {
+    targetObject = null
   }
 
-  cubes.forEach((cube, index) => {
-    console.log(index, cube.userData.project.title)
+  // ------------------------------------------------------------------------------------------------------- LOG
+  Objects.forEach((object, index) => {
+    console.log(index, object.userData.project.title)
   })
 
 })
@@ -284,8 +364,9 @@ window.addEventListener("click", () => {
 // Click Event Directly Open Site
 // window.addEventListener("click", () => {
 
-//   if (hoveredCube) {
-//     const project = hoveredCube.userData
+//   if (hoveredObject) {
+//     const project = hoveredObject.userData
+//   // ------------------------------------------------------------------------------------------------------- LOG
 //     console.log("Opening project:", project.title)
 //     window.open(project.link, "_blank")
 //   }
