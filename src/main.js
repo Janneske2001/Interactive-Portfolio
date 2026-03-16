@@ -11,8 +11,12 @@ const modelLoader = new GLTFLoader()
 
 let hoveredObject = null
 let targetObject = null
+let selectedObject = null
 
 let projectOpen = false
+
+let cameraTargetPosition = null
+let controlsTargetPosition = null
 
 
 // Dynamic Grid Texture Making
@@ -72,8 +76,12 @@ const camera = new THREE.PerspectiveCamera(
   1000
 )
 
-camera.position.set(0, 7, 2)
-// camera.lookAt(0, 0, 0)
+
+const defaultCameraPosition = new THREE.Vector3(0, 7, 2)
+const defaultLookTarget = new THREE.Vector3(0, 0, 0)
+
+camera.position.copy(defaultCameraPosition)
+camera.lookAt(defaultLookTarget)
 
 // Renderer + Controls
 const renderer = new THREE.WebGLRenderer({ antialias: true })
@@ -299,7 +307,9 @@ function animate() {
   const time = clock.getElapsedTime()
 
   Objects.forEach((object, index) => {
-    object.position.y = 1 + Math.sin(time + index) * 0.2
+    if (object !== selectedObject) {
+      object.position.y = 1 + Math.sin(time + index) * 0.2
+    }
   })
 
 
@@ -326,23 +336,38 @@ function animate() {
   // const distance = camera.position.distanceTo(grid.position)
   // grid.material.opacity = Math.min(0.6, 20 / distance)
 
-// Zoom In On Object When Clicked
-  if (targetObject) {
-    const targetPosition = new THREE.Vector3()
-    targetPosition.copy(targetObject.position)
-    // targetPosition.x += 0 // Will cause it to go sideways
-    targetPosition.z += 0.4 // Will always keep it straight
-    targetPosition.y += 3.5
-    camera.position.lerp(targetPosition, 0.05)
-    controls.target.lerp(targetObject.position, 0.05)
-  }
+// // Zoom In On Object When Clicked
+  if (cameraTargetPosition) {
 
-  // Trying a zoom out when clicked away
-  // else {
-    
-  //   camera.position.lerp(targetPosition, 0.05)
-  //   controls.target.lerp(targetObject.position, 0.05)
-  // }
+    camera.position.lerp(cameraTargetPosition, 0.08)
+
+    if (controlsTargetPosition) {
+      controls.target.lerp(controlsTargetPosition, 0.08)
+    }
+
+    if (camera.position.distanceTo(cameraTargetPosition) < 0.05) {
+
+      cameraTargetPosition = null
+      controlsTargetPosition = null
+
+    }
+
+  }
+//   if (targetObject) {
+//     const targetPosition = new THREE.Vector3()
+//     targetPosition.copy(targetObject.position)
+//     // targetPosition.x += 0 // Will cause it to go sideways
+//     targetPosition.z += 0.4 // Will always keep it straight
+//     targetPosition.y += 3.5
+//     camera.position.lerp(targetPosition, 0.05)
+//     controls.target.lerp(targetObject.position, 0.05)
+//   }
+
+//   // Trying a zoom out when clicked away
+//   else {
+//     camera.position.lerp(defaultCameraPosition, 0.05)
+//     camera.lookAt(defaultLookTarget)
+//   }
 
 
   requestAnimationFrame(animate)
@@ -363,6 +388,9 @@ function showProject(project) {
 
   projectOpen = true
 
+  controls.enablePan = false
+  controls.enableZoom = false
+
   console.log("Opening project:", project)
 
   document.getElementById("project-title").textContent = project.title
@@ -375,33 +403,64 @@ function showProject(project) {
 
 
 // Click Event Zoom In
+
 window.addEventListener("click", () => {
 
-  if (projectOpen) return
+  if (projectOpen) return // When an Info Panel is active, Return
 
   if (hoveredObject) {
 
     targetObject = hoveredObject
-    // open project panel
+    selectedObject = hoveredObject
+
+    cameraTargetPosition = new THREE.Vector3(
+      hoveredObject.position.x,
+      hoveredObject.position.y + 3.5,
+      hoveredObject.position.z + 0.4
+    )
+
+    controlsTargetPosition = hoveredObject.position.clone()
+
     showProject(hoveredObject.userData.project)
 
   }
-  else {
-    targetObject = null
-  }
-
-  // // ------------------------------------------------------------------------------------------------------- LOG
-  // Objects.forEach((object, index) => {
-  //   console.log(index, object.userData.project.title)
-  // })
 
 })
+// window.addEventListener("click", () => {
+
+//   if (projectOpen) return
+
+//   if (hoveredObject) {
+
+//     targetObject = hoveredObject
+//     // open project panel
+//     showProject(hoveredObject.userData.project)
+
+//   }
+//   else {
+//     targetObject = null
+//   }
+
+//   // // ------------------------------------------------------------------------------------------------------- LOG
+//   // Objects.forEach((object, index) => {
+//   //   console.log(index, object.userData.project.title)
+//   // })
+
+// })
 
 document.getElementById("close-project").addEventListener("click", () => {
 
   projectOpen = false
+
+  controls.enablePan = true
+  controls.enableZoom = true
+
   document.getElementById("project-panel").classList.add("hidden")
-  targetObject = null
+
+  cameraTargetPosition = defaultCameraPosition
+  controlsTargetPosition = defaultLookTarget
+
+  selectedObject = null
 
 })
 
