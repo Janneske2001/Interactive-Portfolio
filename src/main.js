@@ -12,6 +12,8 @@ const modelLoader = new GLTFLoader()
 let hoveredObject = null
 let targetObject = null
 
+let projectOpen = false
+
 
 // Dynamic Grid Texture Making
 function createGridTexture() {
@@ -359,6 +361,8 @@ function animate() {
 
 function showProject(project) {
 
+  projectOpen = true
+
   console.log("Opening project:", project)
 
   document.getElementById("project-title").textContent = project.title
@@ -372,6 +376,8 @@ function showProject(project) {
 
 // Click Event Zoom In
 window.addEventListener("click", () => {
+
+  if (projectOpen) return
 
   if (hoveredObject) {
 
@@ -390,6 +396,23 @@ window.addEventListener("click", () => {
   // })
 
 })
+
+document.getElementById("close-project").addEventListener("click", () => {
+
+  projectOpen = false
+  document.getElementById("project-panel").classList.add("hidden")
+  targetObject = null
+
+})
+
+const panel = document.getElementById("project-panel")
+
+panel.addEventListener("click", (event) => {
+  event.stopPropagation()
+})
+
+
+
 
 // Click Event Directly Open Site
 // window.addEventListener("click", () => {
