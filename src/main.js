@@ -198,7 +198,7 @@ const cube = new THREE.Mesh(geometry, material)
 // Objects With Data
 import { projects } from "./data/projects.js"
 
-const Objects = []
+const objects = []
 const xSpacing = 3
 const zSpacing = 3
 
@@ -228,15 +228,15 @@ projects.forEach((project, index) => {
   console.log("Attached project:", object.userData.project.title)
 
   scene.add(object)
-  Objects.push(object)
+  objects.push(object)
 
 })
 
 // ------------------------------------------------------------------------------------------------------- LOG
 console.table(projects)
-console.log(Objects)
+console.log(objects)
 
-Objects.forEach(object => {
+objects.forEach(object => {
   object.userData.targetScale = 1 // default scale
 })
 
@@ -272,29 +272,43 @@ const clock = new THREE.Clock()
 
 
 
-// -------------------------                                                        Animation
+// ---------------------------------------------------------------------------------  Animation
 function animate() {
   raycaster.setFromCamera(mouse, camera)
 
-  const intersects = raycaster.intersectObjects(Objects)
+  const intersects = raycaster.intersectObjects(objects)
 
 
 
   // Enlarge on Hover
   if (intersects.length > 0) {
     const object = intersects[0].object
+
     if (hoveredObject !== object) {
-      if (hoveredObject) hoveredObject.userData.targetScale = 1 // reset previous
+
+      if (hoveredObject && hoveredObject !== selectedObject) {
+        hoveredObject.userData.targetScale = 1
+      }
+
       hoveredObject = object
-      object.userData.targetScale = 1.5 // hover target
+
+      // ❗ Only apply hover scale if NOT selected
+      if (object !== selectedObject) {
+        object.userData.targetScale = 1.5
+      }
+
     }
-  }
-  else {
-    if (hoveredObject) hoveredObject.userData.targetScale = 1
+
+  } else {
+
+    if (hoveredObject && hoveredObject !== selectedObject) {
+      hoveredObject.userData.targetScale = 1
+    }
+
     hoveredObject = null
   }
 
-  Objects.forEach(object => {
+  objects.forEach(object => {
     // Smoothly lerp each axis toward targetScale
     const s = object.userData.targetScale
     object.scale.x += (s - object.scale.x) * 0.2
@@ -306,7 +320,7 @@ function animate() {
   // Bounce Animation
   const time = clock.getElapsedTime()
 
-  Objects.forEach((object, index) => {
+  objects.forEach((object, index) => {
     if (object !== selectedObject) {
       object.position.y = 1 + Math.sin(time + index) * 0.2
     }
@@ -314,7 +328,7 @@ function animate() {
 
 
   // Follow Mouse
-  Objects.forEach((object) => {
+  objects.forEach((object) => {
 
     // Project object position to screen space
     const vector = object.position.clone()
@@ -353,21 +367,7 @@ function animate() {
     }
 
   }
-//   if (targetObject) {
-//     const targetPosition = new THREE.Vector3()
-//     targetPosition.copy(targetObject.position)
-//     // targetPosition.x += 0 // Will cause it to go sideways
-//     targetPosition.z += 0.4 // Will always keep it straight
-//     targetPosition.y += 3.5
-//     camera.position.lerp(targetPosition, 0.05)
-//     controls.target.lerp(targetObject.position, 0.05)
-//   }
 
-//   // Trying a zoom out when clicked away
-//   else {
-//     camera.position.lerp(defaultCameraPosition, 0.05)
-//     camera.lookAt(defaultLookTarget)
-//   }
 
 
   requestAnimationFrame(animate)
@@ -402,8 +402,9 @@ function showProject(project) {
 }
 
 
-// Click Event Zoom In
+// --------------------------------------------------------------------------------- CLICK
 
+// Click Event Zoom In
 window.addEventListener("click", () => {
 
   if (projectOpen) return // When an Info Panel is active, Return
@@ -412,6 +413,20 @@ window.addEventListener("click", () => {
 
     targetObject = hoveredObject
     selectedObject = hoveredObject
+
+    // Scaling up objects when selected
+    selectedObject.userData.targetScale = 1.5
+
+    objects.forEach(object => {
+
+      if (object !== selectedObject) {
+
+        object.material.transparent = true
+        object.material.opacity = 0.35
+
+      }
+
+    })
 
     cameraTargetPosition = new THREE.Vector3(
       hoveredObject.position.x,
@@ -442,7 +457,7 @@ window.addEventListener("click", () => {
 //   }
 
 //   // // ------------------------------------------------------------------------------------------------------- LOG
-//   // Objects.forEach((object, index) => {
+//   // objects.forEach((object, index) => {
 //   //   console.log(index, object.userData.project.title)
 //   // })
 
@@ -460,7 +475,19 @@ document.getElementById("close-project").addEventListener("click", () => {
   cameraTargetPosition = defaultCameraPosition
   controlsTargetPosition = defaultLookTarget
 
+  // Scaling object back to normal
+  objects.forEach(object => {
+    object.userData.targetScale = 1
+  })
+  
   selectedObject = null
+
+  objects.forEach(object => {
+
+    object.material.opacity = 1
+    object.material.transparent = false
+
+  })
 
 })
 
