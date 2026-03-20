@@ -15,27 +15,76 @@ canvas {
 }
 
 #project-panel {
-  position: absolute;
-  right: 40px;
-  top: 40px;
+  position: fixed;
+  right: 5vh;
+  top: 5vh;
 
-  width: 320px;
+  width: 35%;
+  height: 90vh;
+  min-width: 300px;
 
-  background: rgba(10,10,20,0.9);
+  overflow: auto;
+  scrollbar-width: none;
+
+  background: rgba(10,10,20,0.6);
   color: white;
+  box-shadow: -10px 0 30px rgba(0, 255, 255, 0.4);
+  border: 2px solid rgba(0, 255, 255, 0.7);
 
   padding: 20px;
   border-radius: 10px;
 
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(5px);
+
+  transform: translateX(120%);
+  opacity: 0;
+  transition: transform 0.4s ease, opacity 0.3s ease;
+}
+
+#project-panel.active {
+  transform: translateX(0);
+  opacity: 1;
 }
 
 #project-panel.hidden {
   display: none;
 }
 
+.panel-item {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.4s ease;
+}
+
+#project-panel.active .panel-item {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+#project-panel.active .panel-item:nth-child(1) { transition-delay: 0.15s; }
+#project-panel.active .panel-item:nth-child(2) { transition-delay: 0.3s; }
+#project-panel.active .panel-item:nth-child(3) { transition-delay: 0.45s; }
+#project-panel.active .panel-item:nth-child(4) { transition-delay: 0.6s; }
+#project-panel.active .panel-item:nth-child(5) { transition-delay: 0.75s; }
+#project-panel.active .panel-item:nth-child(6) { transition-delay: 0.9s; }
+#project-panel.active .panel-item:nth-child(7) { transition-delay: 1.05s; }
+
 #project-image {
   width: 100%;
   border-radius: 6px;
   margin: 10px 0;
+}
+
+.tech-tag {
+  display: inline-block;
+  padding: 4px 10px;
+  margin: 4px 4px 0 0;
+
+  font-size: 12px;
+  border-radius: 6px;
+
+  background: rgba(0, 255, 255, 0.1);
+  border: 1px solid rgba(0, 255, 255, 0.3);
+
+  color: #00ffff;
 }

@@ -159,12 +159,12 @@ scene.add(grid)
 
 // Cube
 const geometry = new THREE.BoxGeometry()
-const material = new THREE.MeshStandardMaterial({
-  color: 0x03b7ff
-})
+// const material = new THREE.MeshStandardMaterial({
+//   color: 0x03b7ff
+// })
 
 // SINGLE CUBE
-const cube = new THREE.Mesh(geometry, material)
+// const cube = new THREE.Mesh(geometry, material)
 
 // scene.add(cube)
 
@@ -294,6 +294,7 @@ function animate() {
 
       // ❗ Only apply hover scale if NOT selected
       if (object !== selectedObject) {
+        // I want to add that if an object is selected, it wil NOT have a hover-grow-effect
         object.userData.targetScale = 1.5
       }
 
@@ -393,11 +394,54 @@ function showProject(project) {
 
   console.log("Opening project:", project)
 
+  // Basic content
   document.getElementById("project-title").textContent = project.title
   document.getElementById("project-image").src = project.image
   document.getElementById("project-description").textContent = project.description
   document.getElementById("project-link").href = project.link
-  document.getElementById("project-panel").classList.remove("hidden")
+
+  // ✅ NEW: Role
+  const roleElement = document.getElementById("project-role")
+  if (roleElement) {
+    roleElement.textContent = project.role
+      ? "Role: " + project.role
+      : ""
+  }
+
+  // ✅ NEW: Tech tags
+  const techContainer = document.getElementById("project-tech")
+  if (techContainer) {
+
+    techContainer.innerHTML = "" // clear previous
+
+    if (project.tech && project.tech.length > 0) {
+
+      project.tech.forEach(t => {
+        const tag = document.createElement("span")
+        tag.textContent = t
+        tag.classList.add("tech-tag")
+        techContainer.appendChild(tag)
+      })
+
+    }
+
+  }
+
+  // Panel animation
+  const panel = document.getElementById("project-panel")
+
+  panel.classList.remove("hidden")
+
+  setTimeout(() => {
+    panel.classList.add("active")
+  }, 10)
+
+  // Reset animation (keep this)
+  const items = document.querySelectorAll("#project-panel .panel-item")
+
+  items.forEach(item => {
+    item.style.transition = ""
+  })
 
 }
 
@@ -417,16 +461,6 @@ window.addEventListener("click", () => {
     // Scaling up objects when selected
     selectedObject.userData.targetScale = 1.5
 
-    objects.forEach(object => {
-
-      if (object !== selectedObject) {
-
-        object.material.transparent = true
-        object.material.opacity = 0.35
-
-      }
-
-    })
 
     cameraTargetPosition = new THREE.Vector3(
       hoveredObject.position.x,
@@ -470,24 +504,30 @@ document.getElementById("close-project").addEventListener("click", () => {
   controls.enablePan = true
   controls.enableZoom = true
 
-  document.getElementById("project-panel").classList.add("hidden")
+  // document.getElementById("project-panel").classList.add("hidden")
+
+  const panel = document.getElementById("project-panel")
+  const items = document.querySelectorAll("#project-panel .panel-item")
+
+  panel.classList.remove("active")
+
+  setTimeout(() => {
+    panel.classList.add("hidden")
+  }, 400) // match CSS duration
 
   cameraTargetPosition = defaultCameraPosition
   controlsTargetPosition = defaultLookTarget
 
-  // Scaling object back to normal
+  // Reset objects properly
   objects.forEach(object => {
+
+    // Reset scale
     object.userData.targetScale = 1
+
   })
   
+  // Only AFTER resetting
   selectedObject = null
-
-  objects.forEach(object => {
-
-    object.material.opacity = 1
-    object.material.transparent = false
-
-  })
 
 })
 

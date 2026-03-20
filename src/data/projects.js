@@ -6,6 +6,8 @@ export const projects = [
     type: "image",
     image: "/images/test.jpg",
     description: "A gravity-based platformer puzzle game set inside a digital system.",
+    role: "Game Design, Programming, Visual Direction",
+    tech: ["Unity", "C#", "Level Design"],
     link: "https://example.com/nova"
 },
 
@@ -15,6 +17,8 @@ export const projects = [
     type: "image",
     image: "/images/test1.png",
     description: "Testing Gearbox description stuff",
+    role: "Game Design, Programming, Visual Direction",
+    tech: ["Unity", "C#", "Level Design"],
     link: "https://example.com/gearbox"
 },
 
@@ -24,6 +28,8 @@ export const projects = [
     type: "image",
     image: "/images/test2.jpg",
     description: "A gravity-based platformer puzzle game set inside a digital system.",
+    role: "Game Design, Programming, Visual Direction",
+    tech: ["Unity", "C#", "Level Design"],
     link: "https://example.com/portfolio"
 },
 
@@ -33,6 +39,8 @@ export const projects = [
     type: "image",
     image: "/images/portfolio.jpg",
     description: "A gravity-based platformer puzzle game set inside a digital system.",
+    role: "Game Design, Programming, Visual Direction",
+    tech: ["Unity", "C#", "Level Design"],
     link: "https://example.com/portfolio"
 },
 
@@ -42,6 +50,8 @@ export const projects = [
     type: "image",
     image: "/images/portfolio.jpg",
     description: "A gravity-based platformer puzzle game set inside a digital system.",
+    role: "Game Design, Programming, Visual Direction",
+    tech: ["Unity", "C#", "Level Design"],
     link: "https://example.com/portfolio"
 },
 
@@ -51,6 +61,8 @@ export const projects = [
     type: "image",
     image: "/images/portfolio.jpg",
     description: "A gravity-based platformer puzzle game set inside a digital system.",
+    role: "Game Design, Programming, Visual Direction",
+    tech: ["Unity", "C#", "Level Design"],
     link: "https://example.com/portfolio"
 },
 
@@ -60,6 +72,8 @@ export const projects = [
     type: "model",
     model: "/models/gearbox.glb",
     description: "A gravity-based platformer puzzle game set inside a digital system.",
+    role: "Game Design, Programming, Visual Direction",
+    tech: ["Unity", "C#", "Level Design"],
     link: "https://example.com/gearbox"
 },
 
@@ -69,6 +83,8 @@ export const projects = [
     type: "image",
     image: "/images/portfolio.jpg",
     description: "A gravity-based platformer puzzle game set inside a digital system.",
+    role: "Game Design, Programming, Visual Direction",
+    tech: ["Unity", "C#", "Level Design"],
     link: "https://example.com/portfolio"
 },
 
@@ -78,6 +94,8 @@ export const projects = [
     type: "image",
     image: "/images/portfolio.jpg",
     description: "A gravity-based platformer puzzle game set inside a digital system.",
+    role: "Game Design, Programming, Visual Direction",
+    tech: ["Unity", "C#", "Level Design"],
     link: "https://example.com/portfolio"
 },
 
@@ -87,6 +105,8 @@ export const projects = [
     type: "image",
     image: "/images/portfolio.jpg",
     description: "A gravity-based platformer puzzle game set inside a digital system.",
+    role: "Game Design, Programming, Visual Direction",
+    tech: ["Unity", "C#", "Level Design"],
     link: "https://example.com/portfolio"
 },
 
@@ -96,6 +116,8 @@ export const projects = [
     type: "image",
     image: "/images/portfolio.jpg",
     description: "A gravity-based platformer puzzle game set inside a digital system.",
+    role: "Game Design, Programming, Visual Direction",
+    tech: ["Unity", "C#", "Level Design"],
     link: "https://example.com/portfolio"
 }
 
