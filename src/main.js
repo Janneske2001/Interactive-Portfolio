@@ -5,8 +5,6 @@ import './style.css'
 
 const raycaster = new THREE.Raycaster()
 const mouse = new THREE.Vector2()
-const textureLoader = new THREE.TextureLoader()
-const modelLoader = new GLTFLoader()
 
 
 let hoveredObject = null
@@ -77,7 +75,7 @@ const camera = new THREE.PerspectiveCamera(
 )
 
 
-const defaultCameraPosition = new THREE.Vector3(0, 7, 2)
+const defaultCameraPosition = new THREE.Vector3(0, 3, 6.5)
 const defaultLookTarget = new THREE.Vector3(0, 0, 0)
 
 camera.position.copy(defaultCameraPosition)
@@ -156,6 +154,17 @@ grid.position.y = -0.01
 scene.add(grid)
 
 
+// Vapor Sun
+
+const sunGeometry = new THREE.PlaneGeometry( 15, 15 );
+const sunTexture = new THREE.TextureLoader().load('../public/images/VaporSun.png')
+const sunMaterial = new THREE.MeshBasicMaterial( { map: sunTexture } );
+sunMaterial.transparent = true;
+const plane = new THREE.Mesh( sunGeometry, sunMaterial );
+plane.position.y = 5
+plane.position.z = -20
+scene.add( plane );
+
 
 // Cube
 const geometry = new THREE.BoxGeometry()
@@ -213,6 +222,8 @@ projects.forEach((project, index) => {
     map: texture
   })
 
+  
+  ObjectMaterial.anisotropy = 16
   const object = new THREE.Mesh(geometry, ObjectMaterial)
 
   const rowLength = 4
