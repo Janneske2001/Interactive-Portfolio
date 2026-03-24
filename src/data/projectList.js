@@ -103,7 +103,7 @@ export const projects = [
     id: "portfolio",
     title: "Old Portfolio",
     type: "image",
-    image: "/images/portfolio.jpg",
+    image: "/images/portfolio.png",
     description: "A gravity-based platformer puzzle game set inside a digital system.",
     role: "Game Design, Programming, Visual Direction",
     tech: ["Unity", "C#", "Level Design"],

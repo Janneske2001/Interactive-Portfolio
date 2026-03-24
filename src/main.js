@@ -12,7 +12,7 @@ import { createProjects } from './objects/projects.js'
 
 import { createInteraction } from './interaction/interaction.js'
 
-import { projects } from './data/projects.js'
+import { projects } from './data/projectList.js'
 
 // Scene
 const scene = createScene()
