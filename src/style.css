@@ -14,6 +14,9 @@ html, body {
 
 canvas {
   display: block;
+  pointer-events: auto;
+  position: relative;
+  z-index: 1;
 }
 
 #project-panel {
@@ -105,6 +108,57 @@ canvas {
     font-family: monospace;
     backdrop-filter: blur(5px);
     animation: pulse 2s infinite;
+}
+
+/* Make sure buttons are clickable */
+#gyro-permission-button {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    z-index: 9999;
+    padding: 12px 24px;
+    background: linear-gradient(135deg, #f40fed, #8a2be2);
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 0 15px rgba(244, 15, 237, 0.5);
+    transition: transform 0.2s, box-shadow 0.2s;
+    pointer-events: auto;
+    font-family: monospace;
+}
+
+#gyro-permission-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(244, 15, 237, 0.8);
+}
+
+#gyro-permission-button:active {
+    transform: scale(0.95);
+}
+
+
+/* Make close button more touch-friendly */
+#close-project {
+    min-width: 50px;
+    min-height: 50px;
+    font-size: 18px;
+    background: rgba(244, 15, 237, 0.3);
+    border: 2px solid #f40fed;
+    border-radius: 25px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s;
+    pointer-events: auto;
+    z-index: 1000;
+    position: relative;
+}
+
+#close-project:hover {
+    background: rgba(244, 15, 237, 0.8);
+    transform: scale(1.05);
 }
 
 @keyframes pulse {
