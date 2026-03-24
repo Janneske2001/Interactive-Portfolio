@@ -23,9 +23,22 @@ export function createControls(camera, domElement) {
         controls.target.clamp(minPan, maxPan);
     });
 
+    // Touch-specific settings
+    controls.touchRotate = true
+    controls.touchZoom = true
+    
+    // Make controls more responsive on mobile
+    controls.rotateSpeed = isMobile() ? 0.8 : 1.0
+    controls.zoomSpeed = isMobile() ? 0.8 : 1.0
+    
     // Lock Target
     controls.target.set(0, 0.5, 0)
     controls.update()
-
+    
     return controls
+}
+
+// Helper function to detect mobile
+function isMobile() {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
 }
