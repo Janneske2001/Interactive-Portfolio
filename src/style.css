@@ -23,6 +23,7 @@ canvas {
   position: fixed;
   right: 5vh;
   top: 5vh;
+  z-index: 1000;
 
   width: 35%;
   height: 90vh;
