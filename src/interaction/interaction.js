@@ -53,7 +53,7 @@ export function createInteraction(camera, controls, objects) {
         let relativeGamma = gamma - (initialOrientation.gamma || 0)
         
         // Clamp and normalize for smoother rotation
-        const maxTilt = 90 // Maximum tilt angle in degrees
+        const maxTilt = 45 // Maximum tilt angle in degrees
         
         // Beta controls X rotation (front/back tilt)
         let targetRotX = Math.max(-maxTilt, Math.min(maxTilt, relativeBeta)) / maxTilt
