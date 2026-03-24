@@ -56,23 +56,18 @@ export function createInteraction(camera, controls, objects) {
         const maxTilt = 45 // Maximum tilt angle in degrees
         
         // Beta controls X rotation (front/back tilt)
-        // When tilting forward, cubes should rotate up/down
         let targetRotX = Math.max(-maxTilt, Math.min(maxTilt, relativeBeta)) / maxTilt
         
         // Gamma controls Y rotation (left/right tilt)
-        // When tilting left, cubes should rotate left/right
         let targetRotY = Math.max(-maxTilt, Math.min(maxTilt, relativeGamma)) / maxTilt
         
-        // Invert or adjust as needed for natural feel
-        targetRotX = -targetRotX // Invert to feel natural
+        // INVERTED: Tilt forward makes cubes go up, tilt back makes cubes go down
+        targetRotX = targetRotX // No inversion needed - direct mapping feels natural
         targetRotY = targetRotY
         
         // Apply smoothing
         gyroRotation.x += (targetRotX * 0.8 - gyroRotation.x) * 0.15
         gyroRotation.y += (targetRotY * 0.8 - gyroRotation.y) * 0.15
-        
-        // Optional: Add slight Z rotation for advanced devices
-        // gyroRotation.z += (-relativeBeta * 0.2 - gyroRotation.z) * 0.1
     }
     
     // Create permission button
@@ -112,13 +107,81 @@ export function createInteraction(camera, controls, objects) {
         // Show calibration feedback
         const indicator = document.getElementById('gyro-indicator')
         if (indicator) {
-            indicator.textContent = '🎮 Calibrating...'
+            const originalText = indicator.textContent
+            indicator.textContent = '🎯 Calibrated! Hold device steady...'
+            indicator.style.background = 'rgba(0,0,0,0.9)'
             setTimeout(() => {
                 if (gyroEnabled) {
-                    indicator.textContent = '🎮 Motion Control Active'
+                    indicator.textContent = originalText
+                    indicator.style.background = 'rgba(0,0,0,0.8)'
                 }
-            }, 1000)
+            }, 1500)
         }
+    }
+    
+    // Create control panel with indicator and calibrate button
+    function createGyroControlPanel() {
+        // Create container
+        const panel = document.createElement('div')
+        panel.id = 'gyro-panel'
+        panel.style.position = 'fixed'
+        panel.style.bottom = '20px'
+        panel.style.right = '20px'
+        panel.style.zIndex = '9998'
+        panel.style.display = 'flex'
+        panel.style.flexDirection = 'column'
+        panel.style.alignItems = 'flex-end'
+        panel.style.gap = '8px'
+        panel.style.pointerEvents = 'none'
+        
+        // Create indicator
+        const indicator = document.createElement('div')
+        indicator.id = 'gyro-indicator'
+        indicator.style.background = 'rgba(0,0,0,0.8)'
+        indicator.style.padding = '8px 16px'
+        indicator.style.borderRadius = '20px'
+        indicator.style.fontSize = '12px'
+        indicator.style.color = '#00ffff'
+        indicator.style.fontFamily = 'monospace'
+        indicator.style.backdropFilter = 'blur(5px)'
+        indicator.style.border = '1px solid rgba(0, 255, 255, 0.3)'
+        indicator.style.pointerEvents = 'none'
+        indicator.style.whiteSpace = 'nowrap'
+        
+        // Create calibrate button
+        const calibrateBtn = document.createElement('button')
+        calibrateBtn.id = 'gyro-calibrate'
+        calibrateBtn.textContent = '🎯 Calibrate'
+        calibrateBtn.style.background = 'rgba(0,0,0,0.8)'
+        calibrateBtn.style.color = '#00ffff'
+        calibrateBtn.style.border = '1px solid #00ffff'
+        calibrateBtn.style.borderRadius = '20px'
+        calibrateBtn.style.padding = '6px 12px'
+        calibrateBtn.style.fontSize = '11px'
+        calibrateBtn.style.cursor = 'pointer'
+        calibrateBtn.style.fontFamily = 'monospace'
+        calibrateBtn.style.pointerEvents = 'auto'
+        calibrateBtn.style.transition = 'all 0.2s'
+        
+        calibrateBtn.onmouseenter = () => {
+            calibrateBtn.style.background = 'rgba(0, 255, 255, 0.2)'
+            calibrateBtn.style.transform = 'scale(1.05)'
+        }
+        calibrateBtn.onmouseleave = () => {
+            calibrateBtn.style.background = 'rgba(0,0,0,0.8)'
+            calibrateBtn.style.transform = 'scale(1)'
+        }
+        
+        calibrateBtn.onclick = (e) => {
+            e.stopPropagation()
+            calibrateGyro()
+        }
+        
+        panel.appendChild(indicator)
+        panel.appendChild(calibrateBtn)
+        document.body.appendChild(panel)
+        
+        return { indicator, calibrateBtn }
     }
     
     // Request gyro permission
@@ -137,10 +200,8 @@ export function createInteraction(camera, controls, objects) {
                         gyroSupported = true
                         gyroEnabled = true
                         button.remove()
+                        createGyroControlPanel()
                         showGyroIndicator(true)
-                        
-                        // Add calibrate button after enabling
-                        addCalibrateButton()
                         console.log('Gyro enabled on iOS')
                     }
                 } catch (error) {
@@ -155,45 +216,14 @@ export function createInteraction(camera, controls, objects) {
             window.addEventListener('deviceorientation', handleGyro)
             gyroSupported = true
             gyroEnabled = true
+            createGyroControlPanel()
             showGyroIndicator(true)
-            addCalibrateButton()
             console.log('Gyro enabled on Android')
         } else {
             console.log('Gyro not supported')
+            createGyroControlPanel()
             showGyroIndicator(false)
         }
-    }
-    
-    // Add calibrate button
-    function addCalibrateButton() {
-        setTimeout(() => {
-            const existingCalibrate = document.getElementById('gyro-calibrate')
-            if (existingCalibrate) return
-            
-            const calibrateBtn = document.createElement('button')
-            calibrateBtn.id = 'gyro-calibrate'
-            calibrateBtn.textContent = '🎯 Calibrate'
-            calibrateBtn.style.position = 'fixed'
-            calibrateBtn.style.bottom = '20px'
-            calibrateBtn.style.left = '120px'
-            calibrateBtn.style.zIndex = '9999'
-            calibrateBtn.style.padding = '8px 16px'
-            calibrateBtn.style.background = 'rgba(0,0,0,0.7)'
-            calibrateBtn.style.color = '#00ffff'
-            calibrateBtn.style.border = '1px solid #00ffff'
-            calibrateBtn.style.borderRadius = '20px'
-            calibrateBtn.style.fontSize = '12px'
-            calibrateBtn.style.cursor = 'pointer'
-            calibrateBtn.style.fontFamily = 'monospace'
-            calibrateBtn.style.pointerEvents = 'auto'
-            
-            calibrateBtn.onclick = (e) => {
-                e.stopPropagation()
-                calibrateGyro()
-            }
-            
-            document.body.appendChild(calibrateBtn)
-        }, 1000)
     }
     
     // Show gyro indicator
@@ -201,15 +231,11 @@ export function createInteraction(camera, controls, objects) {
         const indicator = document.getElementById('gyro-indicator')
         if (indicator) {
             if (enabled) {
-                indicator.textContent = '🎮 Motion Control Active - Tilt device to rotate cubes'
-                indicator.style.display = 'block'
-                indicator.style.background = 'rgba(0,0,0,0.8)'
-                setTimeout(() => {
-                    indicator.style.opacity = '0.7'
-                }, 3000)
+                indicator.textContent = '🎮 Motion Control Active • Tilt device to rotate cubes'
+                indicator.style.opacity = '1'
             } else {
                 indicator.textContent = '📱 Motion Control Not Available'
-                indicator.style.display = 'block'
+                indicator.style.opacity = '0.6'
             }
         }
     }
@@ -400,17 +426,14 @@ export function createInteraction(camera, controls, objects) {
         // Apply rotation based on input method
         objects.forEach((object) => {
             if (gyroEnabled && isMobile && !projectOpen && !isTouching) {
-                // Use gyro for rotation on mobile - rotate cubes based on device tilt
+                // Use gyro for rotation on mobile
                 if (object !== selectedObject) {
-                    // Map gyro values to rotation angles
-                    // Rotate X (up/down) and Y (left/right)
-                    object.rotation.x = gyroRotation.x * 0.8
+                    // INVERTED: Tilt forward makes cubes go up
+                    object.rotation.x = -gyroRotation.x * 0.8  // Negative for natural feel
                     object.rotation.y = gyroRotation.y * 0.8
-                    // Keep Z rotation minimal for stability
                     object.rotation.z = gyroRotation.z * 0.3
                 } else {
-                    // Selected object rotates less
-                    object.rotation.x = gyroRotation.x * 0.4
+                    object.rotation.x = -gyroRotation.x * 0.4
                     object.rotation.y = gyroRotation.y * 0.4
                 }
             } else if (!gyroEnabled || !isMobile) {
