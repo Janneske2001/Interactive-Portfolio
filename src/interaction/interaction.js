@@ -67,7 +67,7 @@ export function createInteraction(camera, controls, objects) {
         
         // Apply smoothing
         gyroRotation.x += (targetRotX * 0.8 - gyroRotation.x) * 0.15
-        gyroRotation.y -= (targetRotY * 0.8 - gyroRotation.y) * 0.15
+        gyroRotation.y += (targetRotY * 0.8 + gyroRotation.y) * 0.15
     }
     
     // Create permission button
