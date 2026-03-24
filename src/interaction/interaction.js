@@ -23,6 +23,7 @@ export function createInteraction(camera, controls, objects) {
     let touchStartPosition = { x: 0, y: 0 }
     let isTouching = false
     let lastTouchPosition = { x: 0, y: 0 }
+    let lastClickTime = 0
     
     // Gyro data
     let gyroRotation = { x: 0, y: 0, z: 0 }
@@ -37,23 +38,19 @@ export function createInteraction(camera, controls, objects) {
     function handleGyro(event) {
         if (!gyroEnabled || projectOpen) return
         
-        // Get beta (front-back) and gamma (left-right)
-        let beta = event.beta || 0  // -180 to 180
-        let gamma = event.gamma || 0 // -90 to 90
+        let beta = event.beta || 0
+        let gamma = event.gamma || 0
         
-        // Limit tilt range for better experience
         const maxTilt = 35
         let normalizedBeta = Math.max(-maxTilt, Math.min(maxTilt, beta)) / maxTilt
         let normalizedGamma = Math.max(-maxTilt, Math.min(maxTilt, gamma)) / maxTilt
         
-        // Apply smoothing (low-pass filter)
         gyroRotation.x += (normalizedBeta * 0.6 - gyroRotation.x) * 0.15
         gyroRotation.y += (normalizedGamma * 0.6 - gyroRotation.y) * 0.15
     }
     
-    // Create permission button (better implementation)
+    // Create permission button
     function createPermissionButton() {
-        // Remove existing button if any
         if (permissionButton) {
             permissionButton.remove()
         }
@@ -77,16 +74,6 @@ export function createInteraction(camera, controls, objects) {
         permissionButton.style.fontFamily = 'monospace'
         permissionButton.style.pointerEvents = 'auto'
         
-        // Add hover effect
-        permissionButton.onmouseenter = () => {
-            permissionButton.style.transform = 'scale(1.05)'
-            permissionButton.style.boxShadow = '0 0 20px rgba(244, 15, 237, 0.8)'
-        }
-        permissionButton.onmouseleave = () => {
-            permissionButton.style.transform = 'scale(1)'
-            permissionButton.style.boxShadow = '0 0 15px rgba(244, 15, 237, 0.5)'
-        }
-        
         document.body.appendChild(permissionButton)
         return permissionButton
     }
@@ -96,7 +83,6 @@ export function createInteraction(camera, controls, objects) {
         if (!isMobile) return
         
         if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
-            // iOS requires explicit permission
             const button = createPermissionButton()
             
             button.onclick = async (e) => {
@@ -120,7 +106,6 @@ export function createInteraction(camera, controls, objects) {
                 }
             }
         } else if ('DeviceOrientationEvent' in window) {
-            // Android and other devices
             window.addEventListener('deviceorientation', handleGyro)
             gyroSupported = true
             gyroEnabled = true
@@ -139,16 +124,12 @@ export function createInteraction(camera, controls, objects) {
             if (enabled) {
                 indicator.textContent = '🎮 Motion Control Active'
                 indicator.style.display = 'block'
-                indicator.style.opacity = '1'
                 setTimeout(() => {
                     indicator.style.opacity = '0.6'
                 }, 3000)
             } else {
                 indicator.textContent = '📱 Motion Control Not Available'
                 indicator.style.display = 'block'
-                setTimeout(() => {
-                    indicator.style.opacity = '0.4'
-                }, 3000)
             }
         }
     }
@@ -171,10 +152,9 @@ export function createInteraction(camera, controls, objects) {
 
     // Touch events (mobile)
     window.addEventListener("touchstart", (event) => {
-        // Don't prevent default on the permission button
+        // Don't block clicks on the permission button
         if (event.target.id === 'gyro-permission-button') return
         
-        event.preventDefault()
         const touch = event.touches[0]
         const coords = getNormalizedCoordinates(touch.clientX, touch.clientY)
         
@@ -189,7 +169,7 @@ export function createInteraction(camera, controls, objects) {
 
     window.addEventListener("touchmove", (event) => {
         if (event.target.id === 'gyro-permission-button') return
-        event.preventDefault()
+        
         const touch = event.touches[0]
         const coords = getNormalizedCoordinates(touch.clientX, touch.clientY)
         
@@ -199,9 +179,8 @@ export function createInteraction(camera, controls, objects) {
     })
 
     window.addEventListener("touchend", (event) => {
+        // Don't block clicks on the permission button
         if (event.target.id === 'gyro-permission-button') return
-        event.preventDefault()
-        isTouching = false
         
         const touchDuration = Date.now() - touchStartTime
         const touchDistance = Math.hypot(
@@ -209,20 +188,33 @@ export function createInteraction(camera, controls, objects) {
             lastTouchPosition.y - touchStartPosition.y
         )
         
-        if (touchDuration < 300 && touchDistance < 0.1) {
-            handleProjectClick()
+        // Only trigger click for short taps (not swipes)
+        if (touchDuration < 300 && touchDistance < 0.1 && !projectOpen) {
+            // Small delay to ensure hoveredObject is set
+            setTimeout(() => {
+                handleProjectClick()
+            }, 10)
         }
+        
+        isTouching = false
     })
 
     // Click Event (desktop)
-    window.addEventListener("click", () => {
-        handleProjectClick()
+    window.addEventListener("click", (event) => {
+        // Don't trigger if clicking on permission button
+        if (event.target.id === 'gyro-permission-button') return
+        
+        if (!projectOpen) {
+            handleProjectClick()
+        }
     })
 
     function handleProjectClick() {
         if (projectOpen) return
 
         if (hoveredObject) {
+            console.log("Opening project:", hoveredObject.userData.project.title)
+            
             targetObject = hoveredObject
             selectedObject = hoveredObject
 
@@ -256,10 +248,12 @@ export function createInteraction(camera, controls, objects) {
     // Add close button listener
     const closeButton = document.getElementById("close-project")
     if (closeButton) {
-        closeButton.addEventListener("click", () => {
+        closeButton.addEventListener("click", (e) => {
+            e.stopPropagation()
             import('../ui/projectPanel.js').then(module => {
                 module.closeProject()
                 resetCameraPosition()
+                projectOpen = false
             })
         })
         
@@ -269,21 +263,21 @@ export function createInteraction(camera, controls, objects) {
             import('../ui/projectPanel.js').then(module => {
                 module.closeProject()
                 resetCameraPosition()
+                projectOpen = false
             })
         })
     }
 
     // Initialize gyro on mobile
     if (isMobile) {
-        // Small delay to ensure DOM is ready
         setTimeout(() => {
             requestGyroPermission()
         }, 500)
     }
 
     function update(gridTexture) {
-        // Raycasting for hover/selection
-        if (isTouching || !gyroEnabled) {
+        // Only update raycasting if not using gyro or if touching
+        if (!gyroEnabled || isTouching || !isMobile) {
             raycaster.setFromCamera(mouse, camera)
             const intersects = raycaster.intersectObjects(objects)
             
@@ -326,7 +320,7 @@ export function createInteraction(camera, controls, objects) {
 
         // Apply rotation based on input method
         objects.forEach((object) => {
-            if (gyroEnabled && isMobile && !projectOpen) {
+            if (gyroEnabled && isMobile && !projectOpen && !isTouching) {
                 // Use gyro for rotation on mobile
                 if (object !== selectedObject) {
                     object.rotation.x += (gyroRotation.x * 0.8 - object.rotation.x) * 0.12
@@ -335,7 +329,7 @@ export function createInteraction(camera, controls, objects) {
                     object.rotation.x += (gyroRotation.x * 0.4 - object.rotation.x) * 0.12
                     object.rotation.y += (gyroRotation.y * 0.4 - object.rotation.y) * 0.12
                 }
-            } else if (!gyroEnabled || !isMobile) {
+            } else {
                 // Use mouse/touch for rotation
                 const rotationStrength = isTouching ? 0.3 : 0.6
                 const vector = object.position.clone()
@@ -348,7 +342,9 @@ export function createInteraction(camera, controls, objects) {
         })
 
         // Move Grid
-        gridTexture.offset.y += 0.003
+        if (gridTexture) {
+            gridTexture.offset.y += 0.003
+        }
 
         // Camera movement
         if (cameraTargetPosition) {
