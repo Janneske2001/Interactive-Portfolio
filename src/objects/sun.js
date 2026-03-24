@@ -4,7 +4,7 @@ import * as THREE from 'three'
 export function createSun(scene) {
 
     const sunGeometry = new THREE.PlaneGeometry(12.5, 12.5)
-    const sunTexture = new THREE.TextureLoader().load('../public/images/VaporSun.png')
+    const sunTexture = new THREE.TextureLoader().load('../images/VaporSun.png')
 
     const sunMaterial = new THREE.MeshBasicMaterial({ map: sunTexture })
     sunMaterial.transparent = true
