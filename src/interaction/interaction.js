@@ -137,7 +137,7 @@ export function createInteraction(camera, controls, objects) {
     // Helper function to get normalized device coordinates
     function getNormalizedCoordinates(clientX, clientY) {
         return {
-            x: (clientX / window.innerWidth) * 2 - 1,
+            x: -(clientX / window.innerWidth) * 2 - 1,
             y: -(clientY / window.innerHeight) * 2 + 1
         }
     }
