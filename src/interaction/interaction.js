@@ -100,25 +100,25 @@ export function createInteraction(camera, controls, objects) {
             hoveredObject = null
         }
 
-        objects.forEach(object => {
+        objects.forEach((object, index) => {
             const s = object.userData.targetScale
+
+            // Scale
             object.scale.x += (s - object.scale.x) * 0.2
             object.scale.y += (s - object.scale.y) * 0.2
             object.scale.z += (s - object.scale.z) * 0.2
-        })
 
-        const time = clock.getElapsedTime()
-        objects.forEach((object, index) => {
+            // Bounce
+            const time = clock.getElapsedTime()
             if (object !== selectedObject) {
                 object.position.y = 1 + Math.sin(time + index) * 0.2
             }
-        })
 
-        objects.forEach((object) => {
-            const vector = object.position.clone()
-            vector.project(camera)
+            // Rotation
+            const vector = object.position.clone().project(camera)
             const dx = mouse.x - vector.x
             const dy = mouse.y - vector.y
+
             object.rotation.y += (dx * 0.6 - object.rotation.y) * 0.1
             object.rotation.x += (-dy * 0.4 - object.rotation.x) * 0.1
         })
