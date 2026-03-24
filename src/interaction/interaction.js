@@ -53,7 +53,7 @@ export function createInteraction(camera, controls, objects) {
         let relativeGamma = gamma - (initialOrientation.gamma || 0)
         
         // Clamp and normalize for smoother rotation
-        const maxTilt = 45 // Maximum tilt angle in degrees
+        const maxTilt = 90 // Maximum tilt angle in degrees
         
         // Beta controls X rotation (front/back tilt)
         let targetRotX = Math.max(-maxTilt, Math.min(maxTilt, relativeBeta)) / maxTilt
@@ -62,12 +62,12 @@ export function createInteraction(camera, controls, objects) {
         let targetRotY = Math.max(-maxTilt, Math.min(maxTilt, relativeGamma)) / maxTilt
         
         // INVERTED: Tilt forward makes cubes go up, tilt back makes cubes go down
-        targetRotX = targetRotX // No inversion needed - direct mapping feels natural
+        targetRotX = -targetRotX // No inversion needed - direct mapping feels natural
         targetRotY = targetRotY
         
         // Apply smoothing
         gyroRotation.x += (targetRotX * 0.8 - gyroRotation.x) * 0.15
-        gyroRotation.y += (targetRotY * 0.8 + gyroRotation.y) * 0.15
+        gyroRotation.y += (targetRotY * 0.8 - gyroRotation.y) * 0.15
     }
     
     // Create permission button
