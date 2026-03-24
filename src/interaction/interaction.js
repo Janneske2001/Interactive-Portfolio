@@ -23,30 +23,56 @@ export function createInteraction(camera, controls, objects) {
     let touchStartPosition = { x: 0, y: 0 }
     let isTouching = false
     let lastTouchPosition = { x: 0, y: 0 }
-    let lastClickTime = 0
     
-    // Gyro data
+    // Gyro data with proper ranges
     let gyroRotation = { x: 0, y: 0, z: 0 }
     let gyroSupported = false
     let gyroEnabled = false
     let permissionButton = null
+    let initialOrientation = null
     
     // Check if device has gyro
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
     
-    // Handle gyro data with smoothing
+    // Handle gyro data with correct mapping
     function handleGyro(event) {
         if (!gyroEnabled || projectOpen) return
         
-        let beta = event.beta || 0
-        let gamma = event.gamma || 0
+        // Get device orientation
+        let beta = event.beta || 0    // Front-back tilt: -180 to 180
+        let gamma = event.gamma || 0  // Left-right tilt: -90 to 90
+        let alpha = event.alpha || 0  // Compass direction: 0-360
         
-        const maxTilt = 35
-        let normalizedBeta = Math.max(-maxTilt, Math.min(maxTilt, beta)) / maxTilt
-        let normalizedGamma = Math.max(-maxTilt, Math.min(maxTilt, gamma)) / maxTilt
+        // Store initial orientation to calibrate
+        if (initialOrientation === null) {
+            initialOrientation = { beta, gamma, alpha }
+        }
         
-        gyroRotation.x += (normalizedBeta * 0.6 - gyroRotation.x) * 0.15
-        gyroRotation.y += (normalizedGamma * 0.6 - gyroRotation.y) * 0.15
+        // Calculate relative tilt from initial position
+        let relativeBeta = beta - (initialOrientation.beta || 0)
+        let relativeGamma = gamma - (initialOrientation.gamma || 0)
+        
+        // Clamp and normalize for smoother rotation
+        const maxTilt = 45 // Maximum tilt angle in degrees
+        
+        // Beta controls X rotation (front/back tilt)
+        // When tilting forward, cubes should rotate up/down
+        let targetRotX = Math.max(-maxTilt, Math.min(maxTilt, relativeBeta)) / maxTilt
+        
+        // Gamma controls Y rotation (left/right tilt)
+        // When tilting left, cubes should rotate left/right
+        let targetRotY = Math.max(-maxTilt, Math.min(maxTilt, relativeGamma)) / maxTilt
+        
+        // Invert or adjust as needed for natural feel
+        targetRotX = -targetRotX // Invert to feel natural
+        targetRotY = targetRotY
+        
+        // Apply smoothing
+        gyroRotation.x += (targetRotX * 0.8 - gyroRotation.x) * 0.15
+        gyroRotation.y += (targetRotY * 0.8 - gyroRotation.y) * 0.15
+        
+        // Optional: Add slight Z rotation for advanced devices
+        // gyroRotation.z += (-relativeBeta * 0.2 - gyroRotation.z) * 0.1
     }
     
     // Create permission button
@@ -78,6 +104,23 @@ export function createInteraction(camera, controls, objects) {
         return permissionButton
     }
     
+    // Calibrate gyro to current position
+    function calibrateGyro() {
+        initialOrientation = null
+        console.log('Gyro calibrated')
+        
+        // Show calibration feedback
+        const indicator = document.getElementById('gyro-indicator')
+        if (indicator) {
+            indicator.textContent = '🎮 Calibrating...'
+            setTimeout(() => {
+                if (gyroEnabled) {
+                    indicator.textContent = '🎮 Motion Control Active'
+                }
+            }, 1000)
+        }
+    }
+    
     // Request gyro permission
     async function requestGyroPermission() {
         if (!isMobile) return
@@ -95,6 +138,9 @@ export function createInteraction(camera, controls, objects) {
                         gyroEnabled = true
                         button.remove()
                         showGyroIndicator(true)
+                        
+                        // Add calibrate button after enabling
+                        addCalibrateButton()
                         console.log('Gyro enabled on iOS')
                     }
                 } catch (error) {
@@ -110,6 +156,7 @@ export function createInteraction(camera, controls, objects) {
             gyroSupported = true
             gyroEnabled = true
             showGyroIndicator(true)
+            addCalibrateButton()
             console.log('Gyro enabled on Android')
         } else {
             console.log('Gyro not supported')
@@ -117,15 +164,48 @@ export function createInteraction(camera, controls, objects) {
         }
     }
     
+    // Add calibrate button
+    function addCalibrateButton() {
+        setTimeout(() => {
+            const existingCalibrate = document.getElementById('gyro-calibrate')
+            if (existingCalibrate) return
+            
+            const calibrateBtn = document.createElement('button')
+            calibrateBtn.id = 'gyro-calibrate'
+            calibrateBtn.textContent = '🎯 Calibrate'
+            calibrateBtn.style.position = 'fixed'
+            calibrateBtn.style.bottom = '20px'
+            calibrateBtn.style.left = '120px'
+            calibrateBtn.style.zIndex = '9999'
+            calibrateBtn.style.padding = '8px 16px'
+            calibrateBtn.style.background = 'rgba(0,0,0,0.7)'
+            calibrateBtn.style.color = '#00ffff'
+            calibrateBtn.style.border = '1px solid #00ffff'
+            calibrateBtn.style.borderRadius = '20px'
+            calibrateBtn.style.fontSize = '12px'
+            calibrateBtn.style.cursor = 'pointer'
+            calibrateBtn.style.fontFamily = 'monospace'
+            calibrateBtn.style.pointerEvents = 'auto'
+            
+            calibrateBtn.onclick = (e) => {
+                e.stopPropagation()
+                calibrateGyro()
+            }
+            
+            document.body.appendChild(calibrateBtn)
+        }, 1000)
+    }
+    
     // Show gyro indicator
     function showGyroIndicator(enabled) {
         const indicator = document.getElementById('gyro-indicator')
         if (indicator) {
             if (enabled) {
-                indicator.textContent = '🎮 Motion Control Active'
+                indicator.textContent = '🎮 Motion Control Active - Tilt device to rotate cubes'
                 indicator.style.display = 'block'
+                indicator.style.background = 'rgba(0,0,0,0.8)'
                 setTimeout(() => {
-                    indicator.style.opacity = '0.6'
+                    indicator.style.opacity = '0.7'
                 }, 3000)
             } else {
                 indicator.textContent = '📱 Motion Control Not Available'
@@ -137,7 +217,7 @@ export function createInteraction(camera, controls, objects) {
     // Helper function to get normalized device coordinates
     function getNormalizedCoordinates(clientX, clientY) {
         return {
-            x: -(clientX / window.innerWidth) * 2 - 1,
+            x: (clientX / window.innerWidth) * 2 - 1,
             y: -(clientY / window.innerHeight) * 2 + 1
         }
     }
@@ -152,8 +232,8 @@ export function createInteraction(camera, controls, objects) {
 
     // Touch events (mobile)
     window.addEventListener("touchstart", (event) => {
-        // Don't block clicks on the permission button
         if (event.target.id === 'gyro-permission-button') return
+        if (event.target.id === 'gyro-calibrate') return
         
         const touch = event.touches[0]
         const coords = getNormalizedCoordinates(touch.clientX, touch.clientY)
@@ -169,6 +249,7 @@ export function createInteraction(camera, controls, objects) {
 
     window.addEventListener("touchmove", (event) => {
         if (event.target.id === 'gyro-permission-button') return
+        if (event.target.id === 'gyro-calibrate') return
         
         const touch = event.touches[0]
         const coords = getNormalizedCoordinates(touch.clientX, touch.clientY)
@@ -179,8 +260,8 @@ export function createInteraction(camera, controls, objects) {
     })
 
     window.addEventListener("touchend", (event) => {
-        // Don't block clicks on the permission button
         if (event.target.id === 'gyro-permission-button') return
+        if (event.target.id === 'gyro-calibrate') return
         
         const touchDuration = Date.now() - touchStartTime
         const touchDistance = Math.hypot(
@@ -188,9 +269,7 @@ export function createInteraction(camera, controls, objects) {
             lastTouchPosition.y - touchStartPosition.y
         )
         
-        // Only trigger click for short taps (not swipes)
         if (touchDuration < 300 && touchDistance < 0.1 && !projectOpen) {
-            // Small delay to ensure hoveredObject is set
             setTimeout(() => {
                 handleProjectClick()
             }, 10)
@@ -201,8 +280,8 @@ export function createInteraction(camera, controls, objects) {
 
     // Click Event (desktop)
     window.addEventListener("click", (event) => {
-        // Don't trigger if clicking on permission button
         if (event.target.id === 'gyro-permission-button') return
+        if (event.target.id === 'gyro-calibrate') return
         
         if (!projectOpen) {
             handleProjectClick()
@@ -276,7 +355,7 @@ export function createInteraction(camera, controls, objects) {
     }
 
     function update(gridTexture) {
-        // Only update raycasting if not using gyro or if touching
+        // Update raycasting for hover detection
         if (!gyroEnabled || isTouching || !isMobile) {
             raycaster.setFromCamera(mouse, camera)
             const intersects = raycaster.intersectObjects(objects)
@@ -321,15 +400,20 @@ export function createInteraction(camera, controls, objects) {
         // Apply rotation based on input method
         objects.forEach((object) => {
             if (gyroEnabled && isMobile && !projectOpen && !isTouching) {
-                // Use gyro for rotation on mobile
+                // Use gyro for rotation on mobile - rotate cubes based on device tilt
                 if (object !== selectedObject) {
-                    object.rotation.x += (gyroRotation.x * 0.8 - object.rotation.x) * 0.12
-                    object.rotation.y += (gyroRotation.y * 0.8 - object.rotation.y) * 0.12
+                    // Map gyro values to rotation angles
+                    // Rotate X (up/down) and Y (left/right)
+                    object.rotation.x = gyroRotation.x * 0.8
+                    object.rotation.y = gyroRotation.y * 0.8
+                    // Keep Z rotation minimal for stability
+                    object.rotation.z = gyroRotation.z * 0.3
                 } else {
-                    object.rotation.x += (gyroRotation.x * 0.4 - object.rotation.x) * 0.12
-                    object.rotation.y += (gyroRotation.y * 0.4 - object.rotation.y) * 0.12
+                    // Selected object rotates less
+                    object.rotation.x = gyroRotation.x * 0.4
+                    object.rotation.y = gyroRotation.y * 0.4
                 }
-            } else {
+            } else if (!gyroEnabled || !isMobile) {
                 // Use mouse/touch for rotation
                 const rotationStrength = isTouching ? 0.3 : 0.6
                 const vector = object.position.clone()
