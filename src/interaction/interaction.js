@@ -78,22 +78,23 @@ export function createInteraction(camera, controls, objects) {
         
         permissionButton = document.createElement('button')
         permissionButton.id = 'gyro-permission-button'
-        permissionButton.textContent = '🎮 Enable Motion Control'
+        permissionButton.textContent = '🎮 Enable Gyro'
         permissionButton.style.position = 'fixed'
         permissionButton.style.bottom = '20px'
         permissionButton.style.left = '20px'
         permissionButton.style.zIndex = '9999'
-        permissionButton.style.padding = '12px 24px'
-        permissionButton.style.background = 'linear-gradient(135deg, #f40fed, #8a2be2)'
-        permissionButton.style.color = 'white'
+        permissionButton.style.padding = '8px 16px'
+        permissionButton.style.background = 'rgba(0,0,0,0.8)'
+        permissionButton.style.color = '#00ffff'
         permissionButton.style.border = 'none'
-        permissionButton.style.borderRadius = '25px'
-        permissionButton.style.fontSize = '16px'
+        permissionButton.style.borderRadius = '20px'
+        permissionButton.style.fontSize = '12px'
         permissionButton.style.fontWeight = 'bold'
         permissionButton.style.cursor = 'pointer'
-        permissionButton.style.boxShadow = '0 0 15px rgba(244, 15, 237, 0.5)'
         permissionButton.style.fontFamily = 'monospace'
         permissionButton.style.pointerEvents = 'auto'
+        permissionButton.style.backdropFilter = 'blur(5px)'
+        permissionButton.style.border = '1px solid rgba(0, 255, 255, 0.3)'
         
         document.body.appendChild(permissionButton)
         return permissionButton
@@ -137,6 +138,7 @@ export function createInteraction(camera, controls, objects) {
         // Create indicator
         const indicator = document.createElement('div')
         indicator.id = 'gyro-indicator'
+        indicator.textContent = '🎮 Gyro Enabled'
         indicator.style.background = 'rgba(0,0,0,0.8)'
         indicator.style.padding = '8px 16px'
         indicator.style.borderRadius = '20px'
@@ -231,7 +233,7 @@ export function createInteraction(camera, controls, objects) {
         const indicator = document.getElementById('gyro-indicator')
         if (indicator) {
             if (enabled) {
-                indicator.textContent = '🎮 Motion Control Active • Tilt device to rotate cubes'
+                indicator.textContent = '🎮 Gyro Enabled'
                 indicator.style.opacity = '1'
             } else {
                 indicator.textContent = '📱 Motion Control Not Available'
