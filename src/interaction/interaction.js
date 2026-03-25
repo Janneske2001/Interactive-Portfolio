@@ -109,7 +109,7 @@ export function createInteraction(camera, controls, objects) {
         const indicator = document.getElementById('gyro-indicator')
         if (indicator) {
             const originalText = indicator.textContent
-            indicator.textContent = '🎯 Calibrated! Hold device steady...'
+            indicator.textContent = '🎯 Calibrated!'
             indicator.style.background = 'rgba(0,0,0,0.9)'
             setTimeout(() => {
                 if (gyroEnabled) {
@@ -135,20 +135,6 @@ export function createInteraction(camera, controls, objects) {
         panel.style.gap = '8px'
         panel.style.pointerEvents = 'none'
         
-        // Create indicator
-        const indicator = document.createElement('div')
-        indicator.id = 'gyro-indicator'
-        indicator.textContent = '🎮 Gyro Enabled'
-        indicator.style.background = 'rgba(0,0,0,0.8)'
-        indicator.style.padding = '8px 16px'
-        indicator.style.borderRadius = '20px'
-        indicator.style.fontSize = '12px'
-        indicator.style.color = '#00ffff'
-        indicator.style.fontFamily = 'monospace'
-        indicator.style.backdropFilter = 'blur(5px)'
-        indicator.style.border = '1px solid rgba(0, 255, 255, 0.3)'
-        indicator.style.pointerEvents = 'none'
-        indicator.style.whiteSpace = 'nowrap'
         
         // Create calibrate button
         const calibrateBtn = document.createElement('button')
@@ -159,28 +145,37 @@ export function createInteraction(camera, controls, objects) {
         calibrateBtn.style.border = '1px solid #00ffff'
         calibrateBtn.style.borderRadius = '20px'
         calibrateBtn.style.padding = '6px 12px'
-        calibrateBtn.style.fontSize = '11px'
+        calibrateBtn.style.fontSize = '12px'
         calibrateBtn.style.cursor = 'pointer'
         calibrateBtn.style.fontFamily = 'monospace'
+        calibrateBtn.style.backdropFilter = 'blur(5px)'
         calibrateBtn.style.pointerEvents = 'auto'
         calibrateBtn.style.transition = 'all 0.2s'
-        
-        calibrateBtn.onmouseenter = () => {
-            calibrateBtn.style.background = 'rgba(0, 255, 255, 0.2)'
-            calibrateBtn.style.transform = 'scale(1.05)'
-        }
-        calibrateBtn.onmouseleave = () => {
-            calibrateBtn.style.background = 'rgba(0,0,0,0.8)'
-            calibrateBtn.style.transform = 'scale(1)'
-        }
         
         calibrateBtn.onclick = (e) => {
             e.stopPropagation()
             calibrateGyro()
         }
+
+        // Create indicator
+        const indicator = document.createElement('div')
+        indicator.id = 'gyro-indicator'
+        indicator.textContent = '🎮 Gyro Enabled'
+        indicator.style.background = 'rgba(0,0,0,0.8)'
+        indicator.style.padding = '6px 12px'
+        indicator.style.borderRadius = '20px'
+        indicator.style.fontSize = '12px'
+        indicator.style.color = '#00ffff'
+        indicator.style.fontFamily = 'monospace'
+        indicator.style.backdropFilter = 'blur(5px)'
+        indicator.style.border = '1px solid #00ffff'
+        indicator.style.pointerEvents = 'none'
+        indicator.style.whiteSpace = 'nowrap'
+        indicator.style.transition = 'all 0.2s'
         
-        panel.appendChild(indicator)
+        
         panel.appendChild(calibrateBtn)
+        panel.appendChild(indicator)
         document.body.appendChild(panel)
         
         return { indicator, calibrateBtn }
@@ -208,7 +203,7 @@ export function createInteraction(camera, controls, objects) {
                     }
                 } catch (error) {
                     console.error('Gyro permission denied:', error)
-                    button.textContent = '❌ Motion Control Blocked'
+                    button.textContent = '❌ Gyro Blocked'
                     setTimeout(() => {
                         button.remove()
                     }, 2000)
@@ -236,7 +231,7 @@ export function createInteraction(camera, controls, objects) {
                 indicator.textContent = '🎮 Gyro Enabled'
                 indicator.style.opacity = '1'
             } else {
-                indicator.textContent = '📱 Motion Control Not Available'
+                indicator.textContent = '📱 Gyro Not Available'
                 indicator.style.opacity = '0.6'
             }
         }
