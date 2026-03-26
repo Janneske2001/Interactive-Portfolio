@@ -1,6 +1,7 @@
 import * as THREE from 'three'
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 
-// Objects With Data
+// Main function
 export function createProjects(scene, projects) {
 
     const objects = []
@@ -9,43 +10,106 @@ export function createProjects(scene, projects) {
     const xSpacing = 3
     const zSpacing = 3
 
+    const textureLoader = new THREE.TextureLoader()
+    const modelLoader = new GLTFLoader()
+
     projects.forEach((project, index) => {
 
-        // ------------------------------------------------------------------------------------------------------- LOG
         console.log("Creating project:", project.title)
-
-        const texture = new THREE.TextureLoader().load(project.image)
-
-        const ObjectMaterial = new THREE.MeshStandardMaterial({
-            map: texture
-        })
-
-        ObjectMaterial.anisotropy = 16
-
-        const object = new THREE.Mesh(geometry, ObjectMaterial)
 
         const rowLength = 4
         const x = index % rowLength
         const z = Math.floor(index / rowLength)
 
-        object.position.x = (x - rowLength / 2) * xSpacing + (xSpacing / 2)
-        object.position.z = (z - rowLength / 2) * zSpacing + zSpacing
+        const posX = (x - rowLength / 2) * xSpacing + (xSpacing / 2)
+        const posZ = (z - rowLength / 2) * zSpacing + zSpacing
 
-        object.userData.project = project
+        // ============================
+        // CREATE PLACEHOLDER CUBE (ALWAYS)
+        // ============================
+        const placeholder = createImageCube(
+            project,
+            geometry,
+            textureLoader,
+            posX,
+            posZ
+        )
 
-        // ------------------------------------------------------------------------------------------------------- LOG
-        console.log("Attached project:", object.userData.project.title)
+        scene.add(placeholder)
+        objects.push(placeholder)
 
-        object.userData.targetScale = 1
+        // ============================
+        // IF MODEL → LOAD + REPLACE
+        // ============================
+        if (project.type === "model" && project.model) {
 
-        scene.add(object)
-        objects.push(object)
+            modelLoader.load(
+
+                project.model,
+
+                (gltf) => {
+                    const model = gltf.scene
+
+                    // Center model
+                    const box = new THREE.Box3().setFromObject(model)
+                    const center = box.getCenter(new THREE.Vector3())
+                    model.position.sub(center)
+
+                    // Scale tweak (adjust if needed)
+                    model.scale.set(1, 1, 1)
+
+                    // Match placeholder position
+                    model.position.x += posX
+                    model.position.z += posZ
+
+                    model.userData.project = project
+                    model.userData.targetScale = 1
+
+                    // Replace placeholder
+                    scene.remove(placeholder)
+                    objects.splice(objects.indexOf(placeholder), 1)
+
+                    scene.add(model)
+                    objects.push(model)
+
+                    console.log("✅ Model loaded:", project.title)
+                },
+
+                undefined,
+
+                (error) => {
+                    console.warn("❌ Model failed, keeping placeholder:", error)
+                }
+            )
+        }
 
     })
 
-    // ------------------------------------------------------------------------------------------------------- LOG
     console.table(projects)
     console.log(objects)
 
     return objects
+}
+
+// ============================
+// 🧊 IMAGE CUBE CREATOR
+// ============================
+function createImageCube(project, geometry, textureLoader, x, z) {
+
+    const texture = textureLoader.load(project.image)
+
+    const material = new THREE.MeshStandardMaterial({
+        map: texture
+    })
+
+    material.anisotropy = 16
+
+    const cube = new THREE.Mesh(geometry, material)
+
+    cube.position.set(x, 0, z)
+
+    cube.userData.project = project
+    cube.userData.targetScale = 1
+
+    return cube
 }

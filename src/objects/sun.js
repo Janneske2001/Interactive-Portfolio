@@ -11,7 +11,7 @@ export function createSun(scene) {
 
     const plane = new THREE.Mesh(sunGeometry, sunMaterial)
 
-    plane.position.y = 5
+    plane.position.y = 3
     plane.position.z = -20
 
     scene.add(plane)

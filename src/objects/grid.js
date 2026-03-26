@@ -22,7 +22,7 @@ export function createGrid(scene) {
     const grid = new THREE.Mesh(gridGeometry, gridMaterial)
 
     grid.rotation.x = -Math.PI / 2
-    grid.position.y = -0.01
+    grid.position.y = -2
 
     scene.add(grid)
 

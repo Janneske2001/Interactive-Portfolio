@@ -315,23 +315,33 @@ export function createInteraction(camera, controls, objects) {
         if (projectOpen) return
 
         if (hoveredObject) {
-            console.log("Opening project:", hoveredObject.userData.project.title)
-            
-            targetObject = hoveredObject
-            selectedObject = hoveredObject
+
+            let obj = hoveredObject
+
+            // Traverse up until we find the parent with project data
+            while (obj && !obj.userData.project) {
+                obj = obj.parent
+            }
+
+            if (!obj) return
+
+            console.log("Opening project:", obj.userData.project.title)
+
+            targetObject = obj
+            selectedObject = obj
 
             selectedObject.userData.targetScale = 1.5
 
             cameraTargetPosition = new THREE.Vector3(
-                hoveredObject.position.x,
-                hoveredObject.position.y + 3.5,
-                hoveredObject.position.z + 0.4
+                obj.position.x,
+                obj.position.y + 3.5,
+                obj.position.z + 0.4
             )
 
-            controlsTargetPosition = hoveredObject.position.clone()
-            
+            controlsTargetPosition = obj.position.clone()
+
             projectOpen = true
-            showProject(hoveredObject.userData.project)
+            showProject(obj.userData.project)
         }
     }
 
@@ -422,24 +432,37 @@ export function createInteraction(camera, controls, objects) {
 
         // Apply rotation based on input method
         objects.forEach((object) => {
+
+            const isModel = object.userData.isModel
+
+            // ============================
+            // 🌀 AUTO ROTATE MODELS (IDLE ONLY)
+            // ============================
+            if (isModel && object !== selectedObject && !projectOpen) {
+                object.rotation.y += 0.01
+            }
+
             if (gyroEnabled && isMobile && !projectOpen && !isTouching) {
-                // Use gyro for rotation on mobile
+
                 if (object !== selectedObject) {
-                    // INVERTED: Tilt forward makes cubes go up
-                    object.rotation.x = -gyroRotation.x * 0.8  // Negative for natural feel
+                    object.rotation.x = -gyroRotation.x * 0.8
                     object.rotation.y = gyroRotation.y * 0.8
                     object.rotation.z = gyroRotation.z * 0.3
                 } else {
                     object.rotation.x = -gyroRotation.x * 0.4
                     object.rotation.y = gyroRotation.y * 0.4
                 }
+
             } else if (!gyroEnabled || !isMobile) {
-                // Use mouse/touch for rotation
+
                 const rotationStrength = isTouching ? 0.3 : 0.6
+
                 const vector = object.position.clone()
                 vector.project(camera)
+
                 const dx = mouse.x - vector.x
                 const dy = mouse.y - vector.y
+
                 object.rotation.y += (dx * rotationStrength - object.rotation.y) * 0.1
                 object.rotation.x += (-dy * 0.4 - object.rotation.x) * 0.1
             }
