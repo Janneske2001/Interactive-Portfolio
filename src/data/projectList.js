@@ -1,14 +1,15 @@
 export const projects = [
 
 {
-    id: "nova",
-    title: "NOVA Breach",
-    type: "image",
-    image: "/images/test.jpg",
-    description: "A gravity-based platformer puzzle game set inside a digital system.",
-    role: "Game Design, Programming, Visual Direction",
-    tech: ["Unity", "C#", "Level Design"],
-    link: "https://example.com/nova"
+    id: "doublename",
+    title: "Double Name",
+    type: "model", // "image" or "model"
+    model: "/models/DoubleName.glb", // Path to GLB/GLTF file
+    image: "/images/thumbnail.jpg", // Fallback/thumbnail image
+    description: "This is a 3D model",
+    role: "3D Modeler",
+    tech: ["Blender", "Three.js"],
+    link: "https://example.com/3dfile"
 },
 
 {
@@ -36,36 +37,39 @@ export const projects = [
 },
 
 {
-    id: "gearbox",
-    title: "3D Gearbox",
-    type: "image",
-    image: "/images/test1.png",
-    description: "Testing Gearbox description stuff",
-    role: "Game Design, Programming, Visual Direction",
-    tech: ["Unity", "C#", "Level Design"],
-    link: "https://example.com/gearbox"
+    id: "coffee",
+    title: "Coffee Reservoir",
+    type: "model", // "image" or "model"
+    model: "/models/Coffee.glb", // Path to GLB/GLTF file
+    image: "/images/thumbnail.jpg", // Fallback/thumbnail image
+    description: "This is a 3D model",
+    role: "3D Modeler",
+    tech: ["Blender", "Three.js"],
+    link: "https://example.com/3dfile"
 },
 
 {
-    id: "portfolio",
-    title: "Old Portfolio",
-    type: "image",
-    image: "/images/test2.jpg",
-    description: "A gravity-based platformer puzzle game set inside a digital system.",
-    role: "Game Design, Programming, Visual Direction",
-    tech: ["Unity", "C#", "Level Design"],
-    link: "https://example.com/portfolio"
+    id: "huntrix",
+    title: "Huntrix Keychain",
+    type: "model", // "image" or "model"
+    model: "/models/Huntrix.glb", // Path to GLB/GLTF file
+    image: "/images/thumbnail.jpg", // Fallback/thumbnail image
+    description: "This is a 3D model",
+    role: "3D Modeler",
+    tech: ["Blender", "Three.js"],
+    link: "https://example.com/3dfile"
 },
 
 {
-    id: "portfolio",
-    title: "Old Portfolio",
-    type: "image",
-    image: "/images/1.png",
-    description: "A gravity-based platformer puzzle game set inside a digital system.",
-    role: "Game Design, Programming, Visual Direction",
-    tech: ["Unity", "C#", "Level Design"],
-    link: "https://example.com/portfolio"
+    id: "gazelle",
+    title: "Gazelle E-Bike Dummy Display",
+    type: "model", // "image" or "model"
+    model: "/models/Gazelle.glb", // Path to GLB/GLTF file
+    image: "/images/thumbnail.jpg", // Fallback/thumbnail image
+    description: "This is a 3D model",
+    role: "3D Modeler",
+    tech: ["Blender", "Three.js"],
+    link: "https://example.com/3dfile"
 },
 
 {
