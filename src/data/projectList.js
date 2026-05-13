@@ -46,11 +46,15 @@ export const projects = [
     title: "Coffee Reservoir",
     type: "model", // "image" or "model"
     model: "/models/Coffee.glb", // Path to GLB/GLTF file
-    image: "/images/thumbnail.jpg", // Fallback/thumbnail image
-    description: "This is a 3D model",
+    image: "/images/coffee.jpg", // Fallback/thumbnail image
+    // description: "This is a 3D model",
     role: "3D Modeler",
     tech: ["Blender", "Three.js"],
-    link: "https://example.com/3dfile"
+    link: "https://example.com/3dfile",
+    content: [
+        { type: "image", src: "/images/coffee.jpg", alt: "Coffee bean extender" },
+        { type: "text", html: "Here you can see the coffee bean extender in action. It can hold up to 500 grams more than the default amount of coffee beans." },
+    ]
 },
 
 {
