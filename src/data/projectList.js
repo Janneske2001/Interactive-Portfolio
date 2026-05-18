@@ -46,14 +46,15 @@ export const projects = [
     title: "Coffee Reservoir",
     type: "model", // "image" or "model"
     model: "/models/Coffee.glb", // Path to GLB/GLTF file
-    image: "/images/coffee.jpg", // Fallback/thumbnail image
+    image: "/images/beans_cad.png", // Fallback/thumbnail image
     // description: "This is a 3D model",
     role: "3D Modeler",
     tech: ["Blender", "Three.js"],
     link: "https://example.com/3dfile",
     content: [
-        { type: "image", src: "/images/coffee.jpg", alt: "Coffee bean extender" },
-        { type: "text", html: "Here you can see the coffee bean extender in action. It can hold up to 500 grams more than the default amount of coffee beans." },
+        { type: "image", src: "/images/beans.jpg", alt: "Coffee bean extender" },
+        { type: "text", html: "Here you can see the coffee bean extender in action. It can hold up to 500 grams more than the default amount of coffee beans. It has a little slot on the inside where you can insert a 'plastic window' which could be from a cut up plastic bottle. Below is a screenshot from TinkerCad, the online tool I used to create this." },
+        { type: "image", src: "/images/beans_cad.png", alt: "Coffee bean extender" }
     ]
 },
 
@@ -79,11 +80,13 @@ export const projects = [
     tech: ["Blender", "Three.js"],
     link: "https://example.com/3dfile",
     content: [
+            { type: "image", src: "/images/gazelle_oos.jpg", alt: "Dashboard view" },
+            { type: "text", html: "This is the first description paragraph..." },
             { type: "image", src: "/images/bike1.jpg", alt: "Dashboard view" },
             { type: "text", html: "This is the first description paragraph..." },
             { type: "image", src: "/images/bike2.jpg", alt: "Mobile view" },
             { type: "text", html: "Another explanation here..." },
-            { type: "image", src: "/images/thumbnail.jpg", alt: "Settings panel" },
+            { type: "image", src: "/images/gazelle_cad.jpg", alt: "Settings panel" },
             { type: "text", html: "Final thoughts and results." }
         ]
 },
