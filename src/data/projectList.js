@@ -1,165 +1,20 @@
 export const projects = [
 
 {
-    id: "doublename",
-    title: "Double Name",
-    type: "model", // "image" or "model"
-    model: "/models/DoubleName.glb", // Path to GLB/GLTF file
-    image: "/images/thumbnail.jpg", // Fallback/thumbnail image
-    description: "This is a 3D model",
-    role: "3D Modeler",
-    tech: ["3D Design", "TinkerCad"],
-    link: "https://example.com/3dfile"
-},
-
-{
     id: "3Dfile",
-    title: "3D Model Example",
+    title: "Game Rules",
     type: "model",
-    model: "/models/SolderBox.glb",
-    image: "/images/solder.jpg",        // still used as thumbnail in the 3D scene
-    role: "3D Modeler",
-    tech: ["Blender", "Three.js"],
-    link: "https://example.com/3dfile",
+    model: "/models/Cards.glb",
+    // image: "/images/solder.jpg",        // still used as thumbnail in the 3D scene
     content: [
-        { type: "text", html: "I needed a case to put my new soldering iron and attributes in. I measured the sizes of all the items I wanted to put inside the box, and made fitting cutouts for them." },
-        { type: "image", src: "/images/solder.jpg", alt: "Inside view" },
-        { type: "text", html: "Here you can see more info." },
-        { type: "image", src: "/images/soldercad.jpg", alt: "CAD drawing" }
+        { type: "text", html: "There are four categories of cards:" },
+        { type: "image", src: "/images/img1.png", alt: "colors" },
+        { type: "text", html: "And four symbols for the cards:" },
+        { type: "image", src: "/images/img2.png", alt: "symbols" },
+        { type: "text", html: "Every player is handed 5 cards randomly. One card is set down from the deck to set up the color and the symbol, and the game begins." },
+        { type: "text", html: "Players must place a card from their deck that matches either the symbol or the color of the last card that was placed in the pile. Whichever card is placed down must be answered by the player. Others can answer or talk about it if they wish to. The goal is for the group to get to know each other and talk, almost forgetting that the game is there." },
+        { type: "text", html: "If a player doesn’t want to answer a card that they can place down, they must place it down and draw another card. This can only be done every other match, so not twice in a row." }
     ]
-},
-
-{
-    id: "deskorgan",
-    title: "Desk Organizer",
-    type: "model", // "image" or "model"
-    model: "/models/DeskOrgan.glb", // Path to GLB/GLTF file
-    image: "/images/thumbnail.jpg", // Fallback/thumbnail image
-    description: "This is a 3D model",
-    role: "3D Modeler",
-    tech: ["Blender", "Three.js"],
-    link: "https://example.com/3dfile"
-},
-
-{
-    id: "coffee",
-    title: "Coffee Reservoir",
-    type: "model", // "image" or "model"
-    model: "/models/Coffee.glb", // Path to GLB/GLTF file
-    image: "/images/beans_cad.png", // Fallback/thumbnail image
-    // description: "This is a 3D model",
-    role: "3D Modeler",
-    tech: ["Blender", "Three.js"],
-    link: "https://example.com/3dfile",
-    content: [
-        { type: "image", src: "/images/beans.jpg", alt: "Coffee bean extender" },
-        { type: "text", html: "Here you can see the coffee bean extender in action. It can hold up to 500 grams more than the default amount of coffee beans. It has a little slot on the inside where you can insert a 'plastic window' which could be from a cut up plastic bottle. Below is a screenshot from TinkerCad, the online tool I used to create this." },
-        { type: "image", src: "/images/beans_cad.png", alt: "Coffee bean extender" }
-    ]
-},
-
-{
-    id: "huntrix",
-    title: "Huntrix Keychain",
-    type: "model", // "image" or "model"
-    model: "/models/Huntrix.glb", // Path to GLB/GLTF file
-    image: "/images/thumbnail.jpg", // Fallback/thumbnail image
-    description: "This is a 3D model",
-    role: "3D Modeler",
-    tech: ["Blender", "Three.js"],
-    link: "https://example.com/3dfile"
-},
-
-{
-    id: "gazelle",
-    title: "Gazelle E-Bike Dummy Display",
-    type: "model", // "image" or "model"
-    model: "/models/Gazelle.glb", // Path to GLB/GLTF file
-    image: "/images/bike2.jpg", // Fallback/thumbnail image
-    role: "3D Modeler",
-    tech: ["Blender", "Three.js"],
-    link: "https://example.com/3dfile",
-    content: [
-            { type: "image", src: "/images/gazelle_oos.jpg", alt: "Dashboard view" },
-            { type: "text", html: "This is the first description paragraph..." },
-            { type: "image", src: "/images/bike1.jpg", alt: "Dashboard view" },
-            { type: "text", html: "This is the first description paragraph..." },
-            { type: "image", src: "/images/bike2.jpg", alt: "Mobile view" },
-            { type: "text", html: "Another explanation here..." },
-            { type: "image", src: "/images/gazelle_cad.jpg", alt: "Settings panel" },
-            { type: "text", html: "Final thoughts and results." }
-        ]
-},
-
-{
-    id: "portfolio",
-    title: "Old Portfolio",
-    type: "image",
-    image: "/images/2.png",      // thumbnail in 3D scene
-    role: "Game Design, Programming, Visual Direction",
-    tech: ["Unity", "C#", "Level Design"],
-    link: "https://example.com/portfolio",
-    content: [
-        { type: "image", src: "/images/2.png", alt: "Main menu" },
-        { type: "text", html: "A gravity-based platformer puzzle game set inside a digital system." },
-        { type: "image", src: "/images/3.png", alt: "Gameplay" },
-        { type: "text", html: "The player must shift gravity to solve puzzles and avoid enemies." }
-    ]
-},
-
-{
-    id: "portfolio",
-    title: "Old Portfolio",
-    type: "image",
-    image: "/images/3.png",
-    description: "A gravity-based platformer puzzle game set inside a digital system.",
-    role: "Game Design, Programming, Visual Direction",
-    tech: ["Unity", "C#", "Level Design"],
-    link: "https://example.com/portfolio"
-},
-
-{
-    id: "gearbox",
-    title: "3D Gearbox",
-    type: "image",
-    image: "/images/4.png",
-    description: "A gravity-based platformer puzzle game set inside a digital system.",
-    role: "Game Design, Programming, Visual Direction",
-    tech: ["Unity", "C#", "Level Design"],
-    link: "https://example.com/gearbox"
-},
-
-{
-    id: "portfolio",
-    title: "Old Portfolio",
-    type: "image",
-    image: "/images/5.png",
-    description: "A gravity-based platformer puzzle game set inside a digital system.",
-    role: "Game Design, Programming, Visual Direction",
-    tech: ["Unity", "C#", "Level Design"],
-    link: "https://example.com/portfolio"
-},
-
-{
-    id: "portfolio",
-    title: "Old Portfolio",
-    type: "image",
-    image: "/images/6.png",
-    description: "A gravity-based platformer puzzle game set inside a digital system.",
-    role: "Game Design, Programming, Visual Direction",
-    tech: ["Unity", "C#", "Level Design"],
-    link: "https://example.com/portfolio"
-},
-
-{
-    id: "portfolio",
-    title: "Old Portfolio",
-    type: "model",
-    image: "/images/portfolio.png",
-    description: "A gravity-based platformer puzzle game set inside a digital system.",
-    role: "Game Design, Programming, Visual Direction",
-    tech: ["Unity", "C#", "Level Design"],
-    link: "https://example.com/portfolio"
 }
 
 ]

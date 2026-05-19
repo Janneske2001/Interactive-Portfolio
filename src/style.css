@@ -8,94 +8,175 @@ html, body {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  touch-action: pan-x pan-y; /* Prevents zoom on double-tap */
-  -webkit-tap-highlight-color: transparent; /* Removes tap highlight */
-  font-family: monospace;
+  touch-action: pan-x pan-y;
+  -webkit-tap-highlight-color: transparent;
+  font-family: 'Segoe UI', 'Monaco', 'Monospace', system-ui, sans-serif;
 }
 
 canvas {
   display: block;
-  pointer-events: auto;
   position: relative;
   z-index: 1;
 }
 
-/* ===== PROJECT PANEL ===== */
+/* ===== PROJECT PANEL – SLIDE FROM BOTTOM ===== */
 #project-panel {
   position: fixed;
-  right: 5vh;
-  top: 5vh;
+  bottom: 0;
+  left: 0;
+  right: 0;
   z-index: 1000;
 
-  width: 35%;
-  height: 90vh;
-  min-width: 300px;
+  max-height: 100vh;
+  overflow-y: auto;
+  background: rgba(12, 12, 24, 0.92);
+  backdrop-filter: blur(16px);
+  color: #ffffff;
+  padding: 100px;
 
-  overflow: auto;
-  scrollbar-width: none;
-
-  background: rgba(10,10,20,0.6);
-  color: white;
-  box-shadow: -10px 0 30px rgba(0, 255, 255, 0.4);
-  border: 2px solid rgba(0, 255, 255, 0.7);
-
-  padding: 20px;
-  border-radius: 10px;
-
-  backdrop-filter: blur(5px);
-
-  transform: translateX(120%);
-  opacity: 0;
-  transition: transform 0.4s ease, opacity 0.3s ease;
+  transform: translateY(100%);
+  transition: transform 0.45s cubic-bezier(0.2, 0.9, 0.4, 1.1);
 }
 
 #project-panel.active {
-  transform: translateX(0);
-  opacity: 1;
+  transform: translateY(0);
 }
 
 #project-panel.hidden {
   display: none;
 }
 
-/* ===== CONTENT CONTAINER ===== */
-#project-content {
-  margin: 20px 0;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+/* Scrollbar styling (optional) */
+#project-panel::-webkit-scrollbar {
+  width: 6px;
+}
+#project-panel::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+}
+#project-panel::-webkit-scrollbar-thumb {
+  background: #C056ED;
+  border-radius: 10px;
 }
 
-/* ===== DYNAMIC ITEMS ===== */
-.project-dynamic-image,
-.project-dynamic-text {
-  opacity: 0;
-  transform: translateY(10px);
-  transition: all 0.4s ease;
+/* ===== TYPOGRAPHY ===== */
+#project-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  letter-spacing: -0.5px;
+  background: linear-gradient(135deg, #fff, #C056ED);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  border-left: 4px solid #C056ED;
+  padding-left: 18px;
+}
+
+/* Role & tech container */
+#project-role {
+  font-size: 1rem;
+  color: #ccc;
+  margin: 8px 0 12px 0;
+  padding-left: 22px;
+  border-left: 2px solid #C056ED80;
+}
+
+#project-tech {
+  margin: 16px 0 20px 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tech-tag {
+  display: inline-block;
+  padding: 6px 14px;
+  font-size: 0.8rem;
+  border-radius: 40px;
+  background: rgba(0, 255, 255, 0.12);
+  border: 1px solid #C056EDaa;
+  color: #C056ED;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  backdrop-filter: blur(4px);
+}
+
+/* ===== DYNAMIC CONTENT ===== */
+#project-content {
+  margin: 24px 0 32px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
 }
 
 .project-dynamic-image {
   width: 100%;
   border-radius: 10px;
+  /* box-shadow: 0 8px 20px rgba(0,0,0,0.5); */
+  /* border: 1px solid rgba(0, 255, 255, 0.3); */
+  transition: transform 0.2s ease;
+}
+.project-dynamic-image:hover {
+  transform: scale(1.01);
 }
 
 .project-dynamic-text {
   line-height: 1.6;
-  color: #ddd;
+  font-size: 1rem;
+  color: #e0e0e0;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 16px 20px;
+  border-radius: 24px;
+  border-left: 3px solid #C056ED;
 }
 
-.project-dynamic-text p {
-  margin-bottom: 10px;
+/* Link & button */
+#project-link {
+  display: inline-block;
+  background: linear-gradient(135deg, #00ccff, #0066ff);
+  color: white;
+  text-decoration: none;
+  padding: 12px 24px;
+  border-radius: 40px;
+  font-weight: bold;
+  margin: 8px 0 16px 0;
+  text-align: center;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 255, 255, 0.2);
+}
+#project-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(0, 255, 255, 0.4);
 }
 
-/* ===== STATIC PANEL ITEMS ===== */
-.panel-item {
+#close-project {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid #C056EDaa;
+  color: #C056ED;
+  padding: 12px 24px;
+  border-radius: 40px;
+  font-weight: bold;
+  cursor: pointer;
+  width: 100%;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(8px);
+}
+#close-project:hover {
+  background: rgba(125, 0, 193, 0.196);
+  transform: translateY(-2px);
+}
+
+/* Fade-in animation for panel items */
+.panel-item,
+.project-dynamic-image,
+.project-dynamic-text {
   opacity: 0;
-  transform: translateY(10px);
-  transition: all 0.4s ease;
+  transform: translateY(20px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
-/* ===== ACTIVE STATE ANIMATIONS ===== */
 #project-panel.active .panel-item,
 #project-panel.active .project-dynamic-image,
 #project-panel.active .project-dynamic-text {
@@ -103,65 +184,34 @@ canvas {
   transform: translateY(0);
 }
 
-/* Delays for static panel items (title, role, tech, link, button) */
-#project-panel.active .panel-item:nth-child(1) { transition-delay: 0.1s; }
-#project-panel.active .panel-item:nth-child(2) { transition-delay: 0.2s; }
-#project-panel.active .panel-item:nth-child(3) { transition-delay: 0.3s; }
-#project-panel.active .panel-item:nth-child(4) { transition-delay: 0.4s; }
-#project-panel.active .panel-item:nth-child(5) { transition-delay: 0.5s; }
-#project-panel.active .panel-item:nth-child(6) { transition-delay: 0.6s; }
-#project-panel.active .panel-item:nth-child(7) { transition-delay: 0.7s; }
+/* Staggered delays */
+#project-panel.active .panel-item:nth-child(1) { transition-delay: 0.05s; }
+#project-panel.active .panel-item:nth-child(2) { transition-delay: 0.1s; }
+#project-panel.active .panel-item:nth-child(3) { transition-delay: 0.15s; }
+#project-panel.active .panel-item:nth-child(4) { transition-delay: 0.2s; }
+#project-panel.active .panel-item:nth-child(5) { transition-delay: 0.25s; }
+#project-panel.active .panel-item:nth-child(6) { transition-delay: 0.3s; }
 
-/* Delays for dynamic content inside #project-content */
 #project-panel.active #project-content > *:nth-child(1) { transition-delay: 0.1s; }
 #project-panel.active #project-content > *:nth-child(2) { transition-delay: 0.2s; }
 #project-panel.active #project-content > *:nth-child(3) { transition-delay: 0.3s; }
 #project-panel.active #project-content > *:nth-child(4) { transition-delay: 0.4s; }
 #project-panel.active #project-content > *:nth-child(5) { transition-delay: 0.5s; }
-#project-panel.active #project-content > *:nth-child(6) { transition-delay: 0.6s; }
-#project-panel.active #project-content > *:nth-child(7) { transition-delay: 0.7s; }
-#project-panel.active #project-content > *:nth-child(8) { transition-delay: 0.8s; }
-#project-panel.active #project-content > *:nth-child(9) { transition-delay: 0.9s; }
-#project-panel.active #project-content > *:nth-child(10) { transition-delay: 1.0s; }
 
-/* ===== LEGACY PROJECT-IMAGE (fallback) ===== */
-#project-image {
-  width: 100%;
-  border-radius: 10px;
-  margin: 10px 0;
-}
-
-/* ===== TECH TAGS ===== */
-.tech-tag {
-  display: inline-block;
-  padding: 4px 10px;
-  margin: 4px 4px 0 0;
-  font-size: 12px;
-  border-radius: 9px;
-  background: rgba(0, 255, 255, 0.2);
-  border: 1px solid rgba(0, 255, 255, 0.5);
-  color: #00ffff;
-}
-
-/* ===== TOUCH FEEDBACK ===== */
-.project-touch-feedback {
+/* ===== GYRO INDICATOR & BUTTONS ===== */
+#gyro-permission-button,
+#gyro-calibrate {
+  font-family: monospace;
+  backdrop-filter: blur(8px);
   transition: transform 0.1s ease;
 }
-.project-touch-feedback:active {
-  transform: scale(0.95);
+#gyro-permission-button:active,
+#gyro-calibrate:active {
+  transform: scale(0.96);
 }
 
-/* ===== GYRO INDICATOR ===== */
 #gyro-indicator {
   pointer-events: none;
   font-family: monospace;
   backdrop-filter: blur(5px);
-}
-
-/* ===== GYRO PERMISSION BUTTON ===== */
-#gyro-permission-button:hover {
-  transform: scale(1.05);
-}
-#gyro-permission-button:active {
-  transform: scale(0.95);
 }

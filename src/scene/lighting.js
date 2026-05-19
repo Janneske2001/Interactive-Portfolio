@@ -15,7 +15,7 @@ export function addLights(scene) {
     const lightBottom = new THREE.PointLight(0xffffff, 1, 0, 0)
     lightBottom.position.set(0, 10, 10)
 
-    const lightGrid = new THREE.PointLight(0xf40fed, 0.5, 0, 0)
+    const lightGrid = new THREE.PointLight(0xC056ED, 0.5, 0, 0)
     lightGrid.position.set(0, -400, 0)
 
     scene.add(lightTop, lightRight, lightLeft, lightBottom, lightGrid)

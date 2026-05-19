@@ -13,10 +13,10 @@ export function createGridTexture() {
     ctx.fillStyle = "#000002"
     ctx.fillRect(0, 0, size, size)
 
-    ctx.strokeStyle = "#f40fed"
-    ctx.lineWidth = 1
+    ctx.strokeStyle = "#C056ED"
+    ctx.lineWidth = 3
 
-    const divisions = 5
+    const divisions = 3
     const step = size / divisions
 
     for (let i = 0; i <= divisions; i++) {

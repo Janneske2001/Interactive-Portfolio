@@ -17,12 +17,13 @@ export function createProjects(scene, projects) {
 
         console.log("Creating project:", project.title)
 
-        const rowLength = 4
+        const rowLength = 1
         const x = index % rowLength
         const z = Math.floor(index / rowLength)
 
         const posX = (x - rowLength / 2) * xSpacing + (xSpacing / 2)
-        const posZ = (z - rowLength / 2) * zSpacing + zSpacing
+        const posZ = 0
+        // const posZ = (z - rowLength / 2) * zSpacing + zSpacing
 
         // ============================
         // CREATE PLACEHOLDER CUBE (ALWAYS)
@@ -106,7 +107,7 @@ function createImageCube(project, geometry, textureLoader, x, z) {
 
     const cube = new THREE.Mesh(geometry, material)
 
-    cube.position.set(x, 0, z)
+    cube.position.set(x, 5, z)
 
     cube.userData.project = project
     cube.userData.targetScale = 1

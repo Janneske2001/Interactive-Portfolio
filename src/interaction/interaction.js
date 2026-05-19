@@ -470,7 +470,7 @@ export function createInteraction(camera, controls, objects) {
 
         // Move Grid
         if (gridTexture) {
-            gridTexture.offset.y += 0.003
+            gridTexture.offset.y += 0.001
         }
 
         // Camera movement
