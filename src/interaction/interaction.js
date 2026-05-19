@@ -82,10 +82,10 @@ export function createInteraction(camera, controls, objects) {
         permissionButton.style.position = 'fixed'
         permissionButton.style.bottom = '20px'
         permissionButton.style.left = '20px'
-        permissionButton.style.zIndex = '500'
+        permissionButton.style.zIndex = '9999'
         permissionButton.style.padding = '8px 16px'
         permissionButton.style.background = 'rgba(0,0,0,0.8)'
-        permissionButton.style.color = '#C056ED'
+        permissionButton.style.color = '#00ffff'
         permissionButton.style.border = 'none'
         permissionButton.style.borderRadius = '20px'
         permissionButton.style.fontSize = '12px'
@@ -94,7 +94,7 @@ export function createInteraction(camera, controls, objects) {
         permissionButton.style.fontFamily = 'monospace'
         permissionButton.style.pointerEvents = 'auto'
         permissionButton.style.backdropFilter = 'blur(5px)'
-        permissionButton.style.border = '1px solid rgba(157, 0, 255, 0.3)'
+        permissionButton.style.border = '1px solid rgba(0, 255, 255, 0.3)'
         
         document.body.appendChild(permissionButton)
         return permissionButton
@@ -128,7 +128,7 @@ export function createInteraction(camera, controls, objects) {
         panel.style.position = 'fixed'
         panel.style.bottom = '20px'
         panel.style.right = '20px'
-        panel.style.zIndex = '501'
+        panel.style.zIndex = '9998'
         panel.style.display = 'flex'
         panel.style.flexDirection = 'column'
         panel.style.alignItems = 'flex-end'
@@ -141,8 +141,8 @@ export function createInteraction(camera, controls, objects) {
         calibrateBtn.id = 'gyro-calibrate'
         calibrateBtn.textContent = '🎯 Calibrate'
         calibrateBtn.style.background = 'rgba(0,0,0,0.8)'
-        calibrateBtn.style.color = '#C056ED'
-        calibrateBtn.style.border = '1px solid #C056ED'
+        calibrateBtn.style.color = '#00ffff'
+        calibrateBtn.style.border = '1px solid #00ffff'
         calibrateBtn.style.borderRadius = '20px'
         calibrateBtn.style.padding = '6px 12px'
         calibrateBtn.style.fontSize = '12px'
@@ -165,10 +165,10 @@ export function createInteraction(camera, controls, objects) {
         indicator.style.padding = '6px 12px'
         indicator.style.borderRadius = '20px'
         indicator.style.fontSize = '12px'
-        indicator.style.color = '#C056ED'
+        indicator.style.color = '#00ffff'
         indicator.style.fontFamily = 'monospace'
         indicator.style.backdropFilter = 'blur(5px)'
-        indicator.style.border = '1px solid #C056ED'
+        indicator.style.border = '1px solid #00ffff'
         indicator.style.pointerEvents = 'none'
         indicator.style.whiteSpace = 'nowrap'
         indicator.style.transition = 'all 0.2s'
@@ -470,7 +470,7 @@ export function createInteraction(camera, controls, objects) {
 
         // Move Grid
         if (gridTexture) {
-            gridTexture.offset.y += 0.001
+            gridTexture.offset.y += 0.003
         }
 
         // Camera movement

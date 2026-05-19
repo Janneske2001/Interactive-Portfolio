@@ -10,7 +10,7 @@ export function createControls(camera, domElement) {
 
     // Max-Min Zoom
     controls.minDistance = 3
-    controls.maxDistance = 5
+    controls.maxDistance = 8
 
     // Prevent Clipping Bottom
     controls.maxPolarAngle = Math.PI / 2
