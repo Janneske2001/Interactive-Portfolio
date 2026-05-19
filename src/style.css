@@ -32,7 +32,7 @@ canvas {
   background: rgba(12, 12, 24, 0.92);
   backdrop-filter: blur(16px);
   color: #ffffff;
-  padding: 50px;
+  padding: 150px 50px;
 
   transform: translateY(100%);
   transition: transform 0.45s cubic-bezier(0.2, 0.9, 0.4, 1.1);
@@ -46,11 +46,6 @@ canvas {
   display: none;
 }
 
-@media (max-width: 600px) {
-#project-panel {
-  padding: 50px;
-}
-}
 
 /* Scrollbar styling (optional) */
 #project-panel::-webkit-scrollbar {
