@@ -380,6 +380,28 @@ export function createInteraction(camera, controls, objects) {
         })
     }
 
+    const closeButtonTop = document.getElementById("close-project-top")
+    if (closeButtonTop) {
+        closeButtonTop.addEventListener("click", (e) => {
+            e.stopPropagation()
+            import('../ui/projectPanel.js').then(module => {
+                module.closeProject()
+                resetCameraPosition()
+                projectOpen = false
+            })
+        })
+        
+        closeButtonTop.addEventListener("touchstart", (e) => {
+            e.preventDefault()
+            e.stopPropagation()
+            import('../ui/projectPanel.js').then(module => {
+                module.closeProject()
+                resetCameraPosition()
+                projectOpen = false
+            })
+        })
+    }
+
     // Initialize gyro on mobile
     if (isMobile) {
         setTimeout(() => {
@@ -388,27 +410,42 @@ export function createInteraction(camera, controls, objects) {
     }
 
     function update(gridTexture) {
-        // Update raycasting for hover detection
+        // ----- Hover detection (fixed) -----
         if (!gyroEnabled || isTouching || !isMobile) {
-            raycaster.setFromCamera(mouse, camera)
-            const intersects = raycaster.intersectObjects(objects)
-            
+            raycaster.setFromCamera(mouse, camera);
+            const intersects = raycaster.intersectObjects(objects, true); // recursive
+
             if (intersects.length > 0) {
-                const object = intersects[0].object
-                if (hoveredObject !== object) {
+                let hit = intersects[0].object;
+
+                // Walk up to find the first ancestor that has a 'project' (or targetScale)
+                let root = hit;
+                while (root && !root.userData?.project) {
+                    root = root.parent;
+                }
+                // Fallback: if no project found, use the hit itself
+                if (!root) root = hit;
+
+                // Ensure targetScale exists
+                if (root.userData.targetScale === undefined) {
+                    root.userData.targetScale = 1;
+                }
+
+                if (hoveredObject !== root) {
+                    // Reset previous hover (unless it's the selected one)
                     if (hoveredObject && hoveredObject !== selectedObject) {
-                        hoveredObject.userData.targetScale = 1
+                        hoveredObject.userData.targetScale = 1;
                     }
-                    hoveredObject = object
-                    if (object !== selectedObject) {
-                        object.userData.targetScale = 1.5
+                    hoveredObject = root;
+                    if (root !== selectedObject) {
+                        root.userData.targetScale = 1.2;
                     }
                 }
             } else {
                 if (hoveredObject && hoveredObject !== selectedObject) {
-                    hoveredObject.userData.targetScale = 1
+                    hoveredObject.userData.targetScale = 1;
                 }
-                hoveredObject = null
+                hoveredObject = null;
             }
         }
 

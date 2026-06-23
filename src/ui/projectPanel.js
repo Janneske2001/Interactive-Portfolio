@@ -59,6 +59,14 @@ export function showProject(project) {
         oldDesc.classList.add("project-dynamic-text", "panel-item");
         contentContainer.appendChild(oldDesc);
     }
+    
+    document.getElementById("close-project-top").addEventListener("click", closeProject);
+    // Also for touch events
+    document.getElementById("close-project-top").addEventListener("touchstart", (e) => {
+    e.preventDefault();
+    closeProject();
+    });
+
 
     // Animate panel
     const panel = document.getElementById("project-panel");

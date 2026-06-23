@@ -28,8 +28,9 @@ canvas {
   z-index: 1000;
 
   width: 35%;
-  height: 90vh;
   min-width: 300px;
+  height: calc(90vh - env(safe-area-inset-bottom, 0px));
+  max-height: 90vh;
 
   overflow: auto;
   scrollbar-width: none;
@@ -40,7 +41,8 @@ canvas {
   border: 2px solid rgba(0, 255, 255, 0.7);
 
   padding: 20px;
-  border-radius: 10px;
+  padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+  border-radius: 35px;
 
   backdrop-filter: blur(5px);
 
@@ -76,7 +78,7 @@ canvas {
 
 .project-dynamic-image {
   width: 100%;
-  border-radius: 10px;
+  border-radius: 20px;
 }
 
 .project-dynamic-text {
@@ -127,7 +129,7 @@ canvas {
 /* ===== LEGACY PROJECT-IMAGE (fallback) ===== */
 #project-image {
   width: 100%;
-  border-radius: 10px;
+  border-radius: 20px;
   margin: 10px 0;
 }
 
@@ -142,6 +144,74 @@ canvas {
   border: 1px solid rgba(0, 255, 255, 0.5);
   color: #00ffff;
 }
+
+
+
+/* ===== BUTTONS ===== */
+/* Link – styled like a button but with an arrow */
+/* ----- View Project link (purple/violet) ----- */
+#project-link {
+  display: block;
+  background: rgba(168, 85, 247, 0.15);
+  border: 1px solid #a855f7;
+  color: #a855f7;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-family: monospace;
+  font-size: 14px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(5px);
+  margin-top: 20px;
+  text-align: center;
+  width: fit-content;
+}
+
+#project-link:hover {
+  background: rgba(168, 85, 247, 0.3);
+  transform: scale(1.03);
+}
+
+#project-link:active {
+  transform: scale(0.95);
+}
+
+
+/* ----- Both close buttons (magenta/purple) ----- */
+#close-project,
+#close-project-top {
+  background: rgba(244, 15, 237, 0.15);
+  border: 1px solid #f40fed;
+  color: #f40fed;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-family: monospace;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(5px);
+  margin-bottom: 10px;
+}
+
+#close-project {
+  display: block;
+  margin: 20px 0 0 0;
+}
+
+#close-project:hover,
+#close-project-top:hover {
+  background: rgba(244, 15, 237, 0.3);
+  transform: scale(1.03);
+}
+
+#close-project:active,
+#close-project-top:active {
+  transform: scale(0.95);
+}
+
+
+
+
 
 /* ===== TOUCH FEEDBACK ===== */
 .project-touch-feedback {
