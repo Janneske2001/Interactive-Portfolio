@@ -11,6 +11,7 @@ html, body {
   touch-action: pan-x pan-y; /* Prevents zoom on double-tap */
   -webkit-tap-highlight-color: transparent; /* Removes tap highlight */
   font-family: monospace;
+  background-color: #000016;
 }
 
 canvas {
@@ -29,11 +30,15 @@ canvas {
 
   width: 35%;
   min-width: 300px;
-  height: calc(90vh - env(safe-area-inset-bottom, 0px));
-  max-height: 90vh;
 
-  overflow: auto;
-  scrollbar-width: none;
+  /* Height adapts to content, but never exceeds the viewport */
+  height: auto;
+  max-height: calc(100dvh - 10vh - env(safe-area-inset-bottom, 0px));
+  /* fallback for older browsers */
+  max-height: calc(100vh - 10vh - env(safe-area-inset-bottom, 0px));
+
+  overflow-y: auto;
+  scrollbar-width: none; /* hide scrollbar for cleaner look */
 
   background: rgba(10,10,20,0.6);
   color: white;
@@ -236,25 +241,25 @@ canvas {
   transform: scale(0.95);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 650px) {
   #project-panel {
     width: 90%;
     right: 5%;
     top: 5vh;
     min-width: unset;
-    height: calc(90vh - env(safe-area-inset-bottom, 0px));
-    max-height: 90vh;
+    max-height: calc(100dvh - 10vh - env(safe-area-inset-bottom, 0px));
+    max-height: calc(100vh - 10vh - env(safe-area-inset-bottom, 0px));
     padding: 15px;
     padding-bottom: calc(15px + env(safe-area-inset-bottom, 0px));
-  }
-
-  #close-project-top {
-    font-size: 18px;
-    padding: 4px 10px;
+    border-radius: 30px;
   }
 
   #project-link {
-    padding: 6px 16px;
-    font-size: 13px;
+    margin-top: 15px;
   }
+
+  #close-project {
+    margin: 15px 0 0 0;
+  }
+
 }
