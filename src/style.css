@@ -235,3 +235,26 @@ canvas {
 #gyro-permission-button:active {
   transform: scale(0.95);
 }
+
+@media (max-width: 768px) {
+  #project-panel {
+    width: 90%;
+    right: 5%;
+    top: 5vh;
+    min-width: unset;
+    height: calc(90vh - env(safe-area-inset-bottom, 0px));
+    max-height: 90vh;
+    padding: 15px;
+    padding-bottom: calc(15px + env(safe-area-inset-bottom, 0px));
+  }
+
+  #close-project-top {
+    font-size: 18px;
+    padding: 4px 10px;
+  }
+
+  #project-link {
+    padding: 6px 16px;
+    font-size: 13px;
+  }
+}
